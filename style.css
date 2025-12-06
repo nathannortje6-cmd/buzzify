@@ -1,122 +1,62 @@
-/* GENERAL */
 body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f2f0f5;
-    color: #333;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f2e6ff;
+  color: #4b0082;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background: #d8b3ff;
+  color: white;
+}
+
+button {
+  padding: 5px 10px;
+  margin: 5px;
+  background: #a64ca6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #852d85;
+}
+
+input, textarea {
+  display: block;
+  width: 90%;
+  margin: 5px auto;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
 .hidden { display: none; }
+.screen { text-align: center; padding: 20px; }
 
-header {
-    padding: 15px;
-    background: linear-gradient(90deg, #9b59b6, #8e44ad);
-    color: #fff;
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-button { cursor: pointer; }
-
-/* AUTH */
-#auth-screen {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: linear-gradient(135deg, #9b59b6, #8e44ad);
-}
-
-.auth-card {
-    background: #fff;
-    border-radius: 20px;
-    padding: 30px;
-    width: 90%;
-    max-width: 400px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    text-align: center;
-}
-
-.auth-card input {
-    width: 80%;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    outline: none;
-}
-
-.auth-card button {
-    padding: 10px 25px;
-    background: #8e44ad;
-    color: #fff;
-    border: none;
-    border-radius: 15px;
-    margin-top: 10px;
-    font-size: 16px;
-}
-
-.auth-card p span {
-    color: #8e44ad;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-/* MAIN APP */
-#main-app .container { padding: 10px; }
-.tab { padding-bottom: 60px; }
-
-/* POSTS / MESSAGES / MARKET */
 .post, #messages-list div, #market-list div {
-    background: #fff;
-    border-radius: 20px;
-    padding: 15px;
-    margin-bottom: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  border: 1px solid #ccc;
+  padding: 8px;
+  margin: 5px auto;
+  width: 90%;
+  border-radius: 5px;
+  background: white;
 }
 
-/* NAVIGATION */
-#main-nav {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background: #fff;
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+/* Dark Mode */
+.dark-mode {
+  background: #2b003a;
+  color: #d1c4e9;
 }
-
-#main-nav button {
-    background: none;
-    border: none;
-    font-size: 16px;
-    color: #8e44ad;
-}
-
-#main-nav button:hover {
-    color: #9b59b6;
-}
-
-/* DARK MODE */
-body.dark-mode {
-    background: #1e1b2e;
-    color: #fff;
-}
-
-body.dark-mode header {
-    background: linear-gradient(90deg, #8e44ad, #9b59b6);
-}
-
-body.dark-mode .auth-card, 
-body.dark-mode .post,
-body.dark-mode #messages-list div,
-body.dark-mode #market-list div {
-    background: #2e2a40;
-    color: #fff;
+.dark-mode header { background: #4b0082; }
+.dark-mode button { background: #6a1b9a; }
+.dark-mode .post, .dark-mode #messages-list div, .dark-mode #market-list div {
+  background: #4a0072;
+  color: #d1c4e9;
 }
