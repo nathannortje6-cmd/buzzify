@@ -1,1 +1,97 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buzzify</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ------------------ LOGIN / SIGNUP SCREEN ------------------ -->
+<div id="auth-screen">
+  <!-- LOGIN -->
+  <div class="auth-card" id="login-form">
+    <h2>Welcome Back</h2>
+    <input type="text" id="login-username" placeholder="Username">
+    <input type="password" id="login-password" placeholder="Password">
+    <button onclick="loginUser()">Login</button>
+    <p>Don't have an account? <span onclick="toggleAuth()">Sign Up</span></p>
+  </div>
+
+  <!-- SIGNUP -->
+  <div class="auth-card hidden" id="signup-form">
+    <h2>Create Account</h2>
+    <input type="text" id="signup-username" placeholder="Username">
+    <input type="password" id="signup-password" placeholder="Password">
+    <button onclick="signupUser()">Sign Up</button>
+    <p>Already have an account? <span onclick="toggleAuth()">Login</span></p>
+  </div>
+</div>
+
+<!-- ------------------ MAIN APP ------------------ -->
+<div id="main-app" class="hidden">
+  <header>Buzzify</header>
+  <div class="container">
+
+    <!-- HOME FEED -->
+    <div id="tab-home" class="tab">
+      <h2>Home Feed</h2>
+      <div id="feed"></div>
+    </div>
+
+    <!-- EXPLORE FEED -->
+    <div id="tab-explore" class="tab hidden">
+      <h2>Explore</h2>
+      <div id="explore-feed"></div>
+    </div>
+
+    <!-- UPLOAD -->
+    <div id="tab-upload" class="tab hidden">
+      <h2>Upload Post</h2>
+      <p>Click the Upload tab to create a new post.</p>
+    </div>
+
+    <!-- MESSAGES -->
+    <div id="tab-messages" class="tab hidden">
+      <h2>Messages</h2>
+      <p>Click the Messages tab to load messages.</p>
+    </div>
+
+    <!-- MARKETPLACE -->
+    <div id="tab-marketplace" class="tab hidden">
+      <h2>Marketplace</h2>
+      <p>Click the Market tab to see items.</p>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="tab-profile" class="tab hidden">
+      <h2>Profile</h2>
+      <p>Username: <span id="profile-name"></span></p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ------------------ NAVIGATION ------------------ -->
+<nav id="main-nav" class="hidden">
+  <button onclick="switchTab('tab-home')">Home</button>
+  <button onclick="switchTab('tab-explore')">Explore</button>
+  <button onclick="switchTab('tab-upload')">Upload</button>
+  <button onclick="switchTab('tab-messages')">Messages</button>
+  <button onclick="switchTab('tab-marketplace')">Market</button>
+  <button onclick="switchTab('tab-profile')">Profile</button>
+</nav>
+
+<script src="script.js"></script>
+<script>
+  // Update profile name dynamically
+  document.addEventListener('DOMContentLoaded', () => {
+    const profileSpan = document.getElementById('profile-name');
+    const current = localStorage.getItem('buzzify_current');
+    if(current) profileSpan.textContent = current;
+  });
+</script>
+</body>
+</html>
