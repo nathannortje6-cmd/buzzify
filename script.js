@@ -1,141 +1,190 @@
+// INIT SUPABASE
+const supabaseUrl = "https://wcpfihklsckizezbdkex.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjcGZpaGtsc2NraXplemJka2V4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMzU1MjksImV4cCI6MjA3ODgxMTUyOX0.6cmKj6rLrN7i3-seUPUXk-o9HNlrN8tDb_ws7dyZSs4";
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-// -------------------- AUTH --------------------
-function toggleAuth() {
-  document.getElementById('login-form').classList.toggle('hidden');
-  document.getElementById('signup-form').classList.toggle('hidden');
-}
-
-function signupUser() {
+// AUTH
+async function signupUser() {
   const username = document.getElementById('signup-username').value.trim();
   const password = document.getElementById('signup-password').value.trim();
-  if (!username || !password) { alert('Fill all fields'); return; }
+  if(!username || !password) { alert('Fill all fields'); return; }
 
-  let users = JSON.parse(localStorage.getItem('buzzify_users') || '{}');
-  if(users[username]){
-    alert('Username already exists');
-    return;
-  }
+  const { data, error } = await supabase
+    .from('users')
+    .insert([{ username, password }])
+    .select();
 
-  users[username] = { password: password, messages: [], posts: [] };
-  localStorage.setItem('buzzify_users', JSON.stringify(users));
+  if(error) { alert(error.message); return; }
+
   localStorage.setItem('buzzify_current', username);
   showApp();
 }
 
-function loginUser() {
+async function loginUser() {
   const username = document.getElementById('login-username').value.trim();
   const password = document.getElementById('login-password').value.trim();
 
-  let users = JSON.parse(localStorage.getItem('buzzify_users') || '{}');
-  if(users[username] && users[username].password === password){
-    localStorage.setItem('buzzify_current', username);
-    showApp();
-  } else {
-    alert('Wrong credentials');
-  }
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('username', username)
+    .eq('password', password)
+    .single();
+
+  if(error || !data) { alert('Wrong credentials'); return; }
+
+  localStorage.setItem('buzzify_current', username);
+  showApp();
+}
+
+function toggleAuth() {
+  document.getElementById('login-form').classList.toggle('hidden');
+  document.getElementById('signup-form').classList.toggle('hidden');
 }
 
 function showApp(){
   document.getElementById('auth-screen').classList.add('hidden');
   document.getElementById('main-app').classList.remove('hidden');
   document.getElementById('main-nav').classList.remove('hidden');
+  document.getElementById('profile-name').textContent = localStorage.getItem('buzzify_current');
   loadFeed();
   switchTab('tab-home');
 }
 
-// -------------------- TABS --------------------
+// TABS
 function switchTab(tabId){
   const tabs = document.querySelectorAll('.tab');
   tabs.forEach(t => t.classList.add('hidden'));
   document.getElementById(tabId).classList.remove('hidden');
+
+  if(tabId === 'tab-messages') loadMessages();
+  if(tabId === 'tab-marketplace') loadMarketplace();
 }
 
-// -------------------- FEED --------------------
-function loadFeed(){
+// POSTS
+async function loadFeed(){
   const feed = document.getElementById('feed');
   const explore = document.getElementById('explore-feed');
   feed.innerHTML = '';
   explore.innerHTML = '';
 
-  let users = JSON.parse(localStorage.getItem('buzzify_users') || '{}');
+  const { data: posts, error } = await supabase
+    .from('posts')
+    .select('*')
+    .order('created_at', { ascending: false });
 
-  for(const [username, data] of Object.entries(users)){
-    data.posts.forEach((post, i) => {
-      const postDiv = document.createElement('div');
-      postDiv.className = 'post';
-      postDiv.innerHTML = `<p><strong>${username}</strong>: ${post}</p>`;
-      feed.appendChild(postDiv);
-      explore.appendChild(postDiv.cloneNode(true));
-    });
-  }
+  if(error) { console.error(error); return; }
+
+  posts.forEach(post => {
+    const postDiv = document.createElement('div');
+    postDiv.className = 'post';
+    postDiv.innerHTML = `<p><strong>${post.username}</strong>: ${post.content}</p>`;
+    feed.appendChild(postDiv);
+    explore.appendChild(postDiv.cloneNode(true));
+  });
 }
 
-// -------------------- UPLOAD --------------------
-function uploadPost(){
-  const content = prompt('Enter your post content or video URL:');
-  if(!content) return;
-  const current = localStorage.getItem('buzzify_current');
-  let users = JSON.parse(localStorage.getItem('buzzify_users'));
-  users[current].posts.push(content);
-  localStorage.setItem('buzzify_users', JSON.stringify(users));
+async function uploadPost(){
+  const content = document.getElementById('upload-content').value.trim();
+  if(!content) return alert('Enter content!');
+  const username = localStorage.getItem('buzzify_current');
+
+  const { data, error } = await supabase
+    .from('posts')
+    .insert([{ username, content }]);
+
+  if(error) { alert(error.message); return; }
+
+  document.getElementById('upload-content').value = '';
   loadFeed();
 }
 
-// -------------------- MESSAGES --------------------
-function sendMessage(){
-  const current = localStorage.getItem('buzzify_current');
-  const to = prompt('Send message to (username):');
-  if(!to) return;
-  const message = prompt('Enter message:');
-  if(!message) return;
+// MESSAGES
+async function sendMessage(){
+  const from = localStorage.getItem('buzzify_current');
+  const to = document.getElementById('message-to').value.trim();
+  const message = document.getElementById('message-content').value.trim();
+  if(!to || !message) return alert('Fill both fields');
 
-  let users = JSON.parse(localStorage.getItem('buzzify_users'));
-  if(!users[to]) { alert('User does not exist'); return; }
+  const { data, error } = await supabase
+    .from('messages')
+    .insert([{ from_user: from, to_user: to, message }]);
 
-  users[to].messages.push({ from: current, message: message });
-  localStorage.setItem('buzzify_users', JSON.stringify(users));
-  alert('Message sent!');
+  if(error) { alert(error.message); return; }
+
+  document.getElementById('message-to').value = '';
+  document.getElementById('message-content').value = '';
+  loadMessages();
 }
 
-function loadMessages(){
+async function loadMessages(){
   const current = localStorage.getItem('buzzify_current');
-  const users = JSON.parse(localStorage.getItem('buzzify_users'));
-  const messagesDiv = document.getElementById('tab-messages');
-  messagesDiv.innerHTML = '<h2>Messages</h2>';
-  users[current].messages.forEach(msg => {
+  const messagesDiv = document.getElementById('messages-list');
+  messagesDiv.innerHTML = '';
+
+  const { data: messages, error } = await supabase
+    .from('messages')
+    .select('*')
+    .or(`from_user.eq.${current},to_user.eq.${current}`)
+    .order('created_at', { ascending: false });
+
+  if(error) { console.error(error); return; }
+
+  messages.forEach(msg => {
     const div = document.createElement('div');
-    div.innerHTML = `<p><strong>${msg.from}:</strong> ${msg.message}</p>`;
+    div.innerHTML = `<p><strong>${msg.from_user} → ${msg.to_user}:</strong> ${msg.message}</p>`;
     messagesDiv.appendChild(div);
   });
 }
 
-// -------------------- MARKETPLACE --------------------
-function addItemToMarket(){
-  const item = prompt('Enter item name:');
-  if(!item) return;
-  const price = prompt('Enter price:');
-  if(!price) return;
+// MARKETPLACE
+async function addItemToMarket(){
+  const seller = localStorage.getItem('buzzify_current');
+  const item = document.getElementById('market-item').value.trim();
+  const price = document.getElementById('market-price').value.trim();
+  if(!item || !price) return alert('Fill both fields');
 
-  let market = JSON.parse(localStorage.getItem('buzzify_market') || '[]');
-  market.push({ seller: localStorage.getItem('buzzify_current'), item, price });
-  localStorage.setItem('buzzify_market', JSON.stringify(market));
+  const { data, error } = await supabase
+    .from('marketplace')
+    .insert([{ seller, item, price }]);
+
+  if(error) { alert(error.message); return; }
+
+  document.getElementById('market-item').value = '';
+  document.getElementById('market-price').value = '';
   loadMarketplace();
 }
 
-function loadMarketplace(){
-  const marketDiv = document.getElementById('tab-marketplace');
-  marketDiv.innerHTML = '<h2>Marketplace</h2>';
-  let market = JSON.parse(localStorage.getItem('buzzify_market') || '[]');
-  market.forEach(entry => {
+async function loadMarketplace(){
+  const marketDiv = document.getElementById('market-list');
+  marketDiv.innerHTML = '';
+
+  const { data: items, error } = await supabase
+    .from('marketplace')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if(error) { console.error(error); return; }
+
+  items.forEach(entry => {
     const div = document.createElement('div');
     div.innerHTML = `<p><strong>${entry.item}</strong> - $${entry.price} (Seller: ${entry.seller})</p>`;
     marketDiv.appendChild(div);
   });
 }
 
-// -------------------- INITIALIZE --------------------
+// DARK MODE
+function toggleDarkMode(){
+  document.body.classList.toggle('dark-mode');
+}
+
+// LOGOUT
+function logout(){
+  localStorage.removeItem('buzzify_current');
+  location.reload();
+}
+
+// INITIALIZE
 document.addEventListener('DOMContentLoaded', ()=>{
-  document.getElementById('tab-upload').addEventListener('click', uploadPost);
-  document.getElementById('tab-messages').addEventListener('click', loadMessages);
-  document.getElementById('tab-marketplace').addEventListener('click', loadMarketplace);
+  loadFeed();
 });
