@@ -1,4 +1,4 @@
-/* ------------------ GENERAL ------------------ */
+/* GENERAL */
 body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -7,6 +7,7 @@ body {
 }
 
 .hidden { display: none; }
+
 header {
     padding: 15px;
     background: linear-gradient(90deg, #9b59b6, #8e44ad);
@@ -14,9 +15,14 @@ header {
     text-align: center;
     font-size: 24px;
     font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* ------------------ AUTH (LOGIN/SIGNUP) ------------------ */
+button { cursor: pointer; }
+
+/* AUTH */
 #auth-screen {
     display: flex;
     flex-direction: column;
@@ -36,11 +42,6 @@ header {
     text-align: center;
 }
 
-.auth-card h2 {
-    margin-bottom: 20px;
-    color: #8e44ad;
-}
-
 .auth-card input {
     width: 80%;
     padding: 10px;
@@ -50,10 +51,6 @@ header {
     outline: none;
 }
 
-.auth-card input:focus {
-    border-color: #9b59b6;
-}
-
 .auth-card button {
     padding: 10px 25px;
     background: #8e44ad;
@@ -61,17 +58,7 @@ header {
     border: none;
     border-radius: 15px;
     margin-top: 10px;
-    cursor: pointer;
     font-size: 16px;
-}
-
-.auth-card button:hover {
-    background: #9b59b6;
-}
-
-.auth-card p {
-    margin-top: 15px;
-    font-size: 14px;
 }
 
 .auth-card p span {
@@ -80,17 +67,12 @@ header {
     font-weight: bold;
 }
 
-/* ------------------ MAIN APP ------------------ */
-#main-app .container {
-    padding: 10px;
-}
+/* MAIN APP */
+#main-app .container { padding: 10px; }
+.tab { padding-bottom: 60px; }
 
-.tab {
-    padding-bottom: 60px; /* for nav bar */
-}
-
-/* ------------------ POSTS ------------------ */
-.post {
+/* POSTS / MESSAGES / MARKET */
+.post, #messages-list div, #market-list div {
     background: #fff;
     border-radius: 20px;
     padding: 15px;
@@ -98,7 +80,7 @@ header {
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-/* ------------------ NAVIGATION ------------------ */
+/* NAVIGATION */
 #main-nav {
     position: fixed;
     bottom: 0;
@@ -115,30 +97,13 @@ header {
     border: none;
     font-size: 16px;
     color: #8e44ad;
-    cursor: pointer;
 }
 
 #main-nav button:hover {
     color: #9b59b6;
 }
 
-/* ------------------ MESSAGES ------------------ */
-#tab-messages div {
-    background: #f1eaf6;
-    margin: 5px 0;
-    padding: 10px;
-    border-radius: 15px;
-}
-
-/* ------------------ MARKETPLACE ------------------ */
-#tab-marketplace div {
-    background: #fef5fc;
-    margin: 5px 0;
-    padding: 10px;
-    border-radius: 15px;
-}
-
-/* ------------------ DARK MODE ------------------ */
+/* DARK MODE */
 body.dark-mode {
     background: #1e1b2e;
     color: #fff;
@@ -148,21 +113,10 @@ body.dark-mode header {
     background: linear-gradient(90deg, #8e44ad, #9b59b6);
 }
 
-body.dark-mode .auth-card {
-    background: #2e2a40;
-    color: #fff;
-}
-
-body.dark-mode .auth-card input {
-    background: #3a3550;
-    color: #fff;
-    border: 1px solid #555;
-}
-
+body.dark-mode .auth-card, 
 body.dark-mode .post,
-body.dark-mode #tab-messages div,
-body.dark-mode #tab-marketplace div {
+body.dark-mode #messages-list div,
+body.dark-mode #market-list div {
     background: #2e2a40;
     color: #fff;
 }
-
