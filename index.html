@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Buzzify</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<!-- ------------------ LOGIN / SIGNUP SCREEN ------------------ -->
+<!-- LOGIN / SIGNUP SCREEN -->
 <div id="auth-screen">
   <!-- LOGIN -->
   <div class="auth-card" id="login-form">
@@ -30,9 +30,12 @@
   </div>
 </div>
 
-<!-- ------------------ MAIN APP ------------------ -->
+<!-- MAIN APP -->
 <div id="main-app" class="hidden">
-  <header>Buzzify</header>
+  <header>
+    Buzzify
+    <button id="toggle-dark" onclick="toggleDarkMode()">🌙</button>
+  </header>
   <div class="container">
 
     <!-- HOME FEED -->
@@ -50,31 +53,39 @@
     <!-- UPLOAD -->
     <div id="tab-upload" class="tab hidden">
       <h2>Upload Post</h2>
-      <p>Click the Upload tab to create a new post.</p>
+      <input type="text" id="upload-content" placeholder="Enter post content or video URL">
+      <button onclick="uploadPost()">Upload</button>
     </div>
 
     <!-- MESSAGES -->
     <div id="tab-messages" class="tab hidden">
       <h2>Messages</h2>
-      <p>Click the Messages tab to load messages.</p>
+      <div id="messages-list"></div>
+      <input type="text" id="message-to" placeholder="Send to username">
+      <input type="text" id="message-content" placeholder="Your message">
+      <button onclick="sendMessage()">Send</button>
     </div>
 
     <!-- MARKETPLACE -->
     <div id="tab-marketplace" class="tab hidden">
       <h2>Marketplace</h2>
-      <p>Click the Market tab to see items.</p>
+      <div id="market-list"></div>
+      <input type="text" id="market-item" placeholder="Item name">
+      <input type="text" id="market-price" placeholder="Price">
+      <button onclick="addItemToMarket()">Add Item</button>
     </div>
 
     <!-- PROFILE -->
     <div id="tab-profile" class="tab hidden">
       <h2>Profile</h2>
       <p>Username: <span id="profile-name"></span></p>
+      <button onclick="logout()">Logout</button>
     </div>
 
   </div>
 </div>
 
-<!-- ------------------ NAVIGATION ------------------ -->
+<!-- NAVIGATION -->
 <nav id="main-nav" class="hidden">
   <button onclick="switchTab('tab-home')">Home</button>
   <button onclick="switchTab('tab-explore')">Explore</button>
@@ -85,13 +96,5 @@
 </nav>
 
 <script src="script.js"></script>
-<script>
-  // Update profile name dynamically
-  document.addEventListener('DOMContentLoaded', () => {
-    const profileSpan = document.getElementById('profile-name');
-    const current = localStorage.getItem('buzzify_current');
-    if(current) profileSpan.textContent = current;
-  });
-</script>
 </body>
 </html>
