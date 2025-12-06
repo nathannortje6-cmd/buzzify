@@ -3,11 +3,23 @@ const supabaseUrl = "https://wcpfihklsckizezbdkex.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjcGZpaGtsc2NraXplemJka2V4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMzU1MjksImV4cCI6MjA3ODgxMTUyOX0.6cmKj6rLrN7i3-seUPUXk-o9HNlrN8tDb_ws7dyZSs4";
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
+// -------------------- INITIAL PAGE LOAD --------------------
+document.addEventListener('DOMContentLoaded', () => {
+    const currentUser = localStorage.getItem('buzzify_current');
+    if (currentUser) {
+        showApp(); // Skip login/signup if user is already logged in
+    } else {
+        document.getElementById('auth-screen').classList.remove('hidden');
+    }
+});
+
 // -------------------- AUTH --------------------
 async function signupUser() {
     const username = document.getElementById('signup-username').value.trim();
     const password = document.getElementById('signup-password').value.trim();
-    if (!username || !password) { alert('Fill all fields'); return; }
+
+    if (username.length < 3) { alert("Username must be at least 3 characters."); return; }
+    if (password.length < 6) { alert("Password must be at least 6 characters."); return; }
 
     const { data, error } = await supabase
         .from('users')
@@ -23,6 +35,9 @@ async function signupUser() {
 async function loginUser() {
     const username = document.getElementById('login-username').value.trim();
     const password = document.getElementById('login-password').value.trim();
+
+    if (username.length < 3) { alert("Enter a valid username."); return; }
+    if (password.length < 6) { alert("Enter a valid password."); return; }
 
     const { data, error } = await supabase
         .from('users')
@@ -51,16 +66,6 @@ function showApp() {
     loadFeed();
     switchTab('tab-home');
 }
-
-// -------------------- INITIAL PAGE LOAD CHECK --------------------
-document.addEventListener('DOMContentLoaded', async () => {
-    const currentUser = localStorage.getItem('buzzify_current');
-    if (currentUser) {
-        showApp(); // Auto-load main app if logged in
-    } else {
-        document.getElementById('auth-screen').classList.remove('hidden');
-    }
-});
 
 // -------------------- TABS --------------------
 function switchTab(tabId) {
