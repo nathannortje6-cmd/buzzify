@@ -1,1 +1,168 @@
+/* ------------------ GENERAL ------------------ */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f2f0f5;
+    color: #333;
+}
+
+.hidden { display: none; }
+header {
+    padding: 15px;
+    background: linear-gradient(90deg, #9b59b6, #8e44ad);
+    color: #fff;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* ------------------ AUTH (LOGIN/SIGNUP) ------------------ */
+#auth-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+}
+
+.auth-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+.auth-card h2 {
+    margin-bottom: 20px;
+    color: #8e44ad;
+}
+
+.auth-card input {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+.auth-card input:focus {
+    border-color: #9b59b6;
+}
+
+.auth-card button {
+    padding: 10px 25px;
+    background: #8e44ad;
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.auth-card button:hover {
+    background: #9b59b6;
+}
+
+.auth-card p {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.auth-card p span {
+    color: #8e44ad;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* ------------------ MAIN APP ------------------ */
+#main-app .container {
+    padding: 10px;
+}
+
+.tab {
+    padding-bottom: 60px; /* for nav bar */
+}
+
+/* ------------------ POSTS ------------------ */
+.post {
+    background: #fff;
+    border-radius: 20px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* ------------------ NAVIGATION ------------------ */
+#main-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #fff;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+#main-nav button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #8e44ad;
+    cursor: pointer;
+}
+
+#main-nav button:hover {
+    color: #9b59b6;
+}
+
+/* ------------------ MESSAGES ------------------ */
+#tab-messages div {
+    background: #f1eaf6;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 15px;
+}
+
+/* ------------------ MARKETPLACE ------------------ */
+#tab-marketplace div {
+    background: #fef5fc;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 15px;
+}
+
+/* ------------------ DARK MODE ------------------ */
+body.dark-mode {
+    background: #1e1b2e;
+    color: #fff;
+}
+
+body.dark-mode header {
+    background: linear-gradient(90deg, #8e44ad, #9b59b6);
+}
+
+body.dark-mode .auth-card {
+    background: #2e2a40;
+    color: #fff;
+}
+
+body.dark-mode .auth-card input {
+    background: #3a3550;
+    color: #fff;
+    border: 1px solid #555;
+}
+
+body.dark-mode .post,
+body.dark-mode #tab-messages div,
+body.dark-mode #tab-marketplace div {
+    background: #2e2a40;
+    color: #fff;
+}
 
