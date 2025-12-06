@@ -5,26 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Buzzify</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
-
-<!-- LOGIN / SIGNUP SCREEN -->
-<div id="auth-screen">
-  <!-- LOGIN -->
-  <div class="auth-card" id="login-form">
-    <h2>Welcome Back</h2>
-    <input type="text" id="login-username" placeholder="Username">
-    <input type="password" id="login-password" placeholder="Password">
+<!-- AUTH SCREEN -->
+<div id="auth-screen" class="screen">
+  <div id="login-form">
+    <h2>Login</h2>
+    <input id="login-username" placeholder="Username">
+    <input id="login-password" type="password" placeholder="Password">
     <button onclick="loginUser()">Login</button>
-    <p>Don't have an account? <span onclick="toggleAuth()">Sign Up</span></p>
+    <p>Don't have an account? <span onclick="toggleAuth()">Sign up</span></p>
   </div>
-
-  <!-- SIGNUP -->
-  <div class="auth-card hidden" id="signup-form">
-    <h2>Create Account</h2>
-    <input type="text" id="signup-username" placeholder="Username">
-    <input type="password" id="signup-password" placeholder="Password">
+  <div id="signup-form" class="hidden">
+    <h2>Sign Up</h2>
+    <input id="signup-username" placeholder="Username">
+    <input id="signup-password" type="password" placeholder="Password">
     <button onclick="signupUser()">Sign Up</button>
     <p>Already have an account? <span onclick="toggleAuth()">Login</span></p>
   </div>
@@ -33,67 +29,43 @@
 <!-- MAIN APP -->
 <div id="main-app" class="hidden">
   <header>
-    Buzzify
-    <button id="toggle-dark" onclick="toggleDarkMode()">🌙</button>
+    <h1>Buzzify</h1>
+    <button onclick="toggleDarkMode()">🌙</button>
+    <button onclick="logout()">Logout</button>
+    <span id="profile-name"></span>
   </header>
-  <div class="container">
 
-    <!-- HOME FEED -->
-    <div id="tab-home" class="tab">
-      <h2>Home Feed</h2>
-      <div id="feed"></div>
-    </div>
+  <!-- NAV -->
+  <nav id="main-nav">
+    <button onclick="switchTab('tab-home')">Home</button>
+    <button onclick="switchTab('tab-messages')">Messages</button>
+    <button onclick="switchTab('tab-marketplace')">Marketplace</button>
+  </nav>
 
-    <!-- EXPLORE FEED -->
-    <div id="tab-explore" class="tab hidden">
-      <h2>Explore</h2>
-      <div id="explore-feed"></div>
-    </div>
+  <!-- TABS -->
+  <div id="tab-home" class="tab">
+    <h2>Home Feed</h2>
+    <textarea id="upload-content" placeholder="Post something..."></textarea>
+    <button onclick="uploadPost()">Post</button>
+    <div id="feed"></div>
+  </div>
 
-    <!-- UPLOAD -->
-    <div id="tab-upload" class="tab hidden">
-      <h2>Upload Post</h2>
-      <input type="text" id="upload-content" placeholder="Enter post content or video URL">
-      <button onclick="uploadPost()">Upload</button>
-    </div>
+  <div id="tab-messages" class="tab hidden">
+    <h2>Messages</h2>
+    <input id="message-to" placeholder="Send to (username)">
+    <textarea id="message-content" placeholder="Message"></textarea>
+    <button onclick="sendMessage()">Send</button>
+    <div id="messages-list"></div>
+  </div>
 
-    <!-- MESSAGES -->
-    <div id="tab-messages" class="tab hidden">
-      <h2>Messages</h2>
-      <div id="messages-list"></div>
-      <input type="text" id="message-to" placeholder="Send to username">
-      <input type="text" id="message-content" placeholder="Your message">
-      <button onclick="sendMessage()">Send</button>
-    </div>
-
-    <!-- MARKETPLACE -->
-    <div id="tab-marketplace" class="tab hidden">
-      <h2>Marketplace</h2>
-      <div id="market-list"></div>
-      <input type="text" id="market-item" placeholder="Item name">
-      <input type="text" id="market-price" placeholder="Price">
-      <button onclick="addItemToMarket()">Add Item</button>
-    </div>
-
-    <!-- PROFILE -->
-    <div id="tab-profile" class="tab hidden">
-      <h2>Profile</h2>
-      <p>Username: <span id="profile-name"></span></p>
-      <button onclick="logout()">Logout</button>
-    </div>
-
+  <div id="tab-marketplace" class="tab hidden">
+    <h2>Marketplace</h2>
+    <input id="market-item" placeholder="Item name">
+    <input id="market-price" placeholder="Price">
+    <button onclick="addItemToMarket()">Add Item</button>
+    <div id="market-list"></div>
   </div>
 </div>
-
-<!-- NAVIGATION -->
-<nav id="main-nav" class="hidden">
-  <button onclick="switchTab('tab-home')">Home</button>
-  <button onclick="switchTab('tab-explore')">Explore</button>
-  <button onclick="switchTab('tab-upload')">Upload</button>
-  <button onclick="switchTab('tab-messages')">Messages</button>
-  <button onclick="switchTab('tab-marketplace')">Market</button>
-  <button onclick="switchTab('tab-profile')">Profile</button>
-</nav>
 
 <script src="script.js"></script>
 </body>
