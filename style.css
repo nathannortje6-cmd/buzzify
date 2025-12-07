@@ -1,96 +1,201 @@
-/* GENERAL BODY & GRADIENT THEME */
-body {
+/* --- GLOBAL --- */
+body, html {
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
-    min-height: 100vh;
-    background: linear-gradient(160deg, #2b003a, #7a00cc, #d18fff);
-    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(160deg, #3c096c, #7209b7);
+    color: #fff;
+    height: 100%;
+    overflow-x: hidden;
 }
 
-/* SCREENS */
 .screen {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 15px;
-    transition: all 0.3s ease-in-out;
+    justify-content: flex-start;
+    padding: 20px;
+    height: 100vh;
+    width: 100vw;
 }
+
 .hidden { display: none; }
 
-/* INPUTS & BUTTONS */
-input, textarea {
-    width: 90%;
-    margin: 5px 0;
-    padding: 12px;
-    border-radius: 15px;
-    border: none;
-    outline: none;
-    font-size: 16px;
+h1, h2, h3 {
+    margin: 10px 0;
 }
 
 button {
-    padding: 12px;
+    background: linear-gradient(90deg, #d0b3ff, #9d7aff);
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-weight: bold;
+}
+
+button:hover { opacity: 0.9; }
+
+input[type=text], input[type=password], input[type=number] {
+    padding: 10px;
     margin: 5px 0;
     border-radius: 15px;
     border: none;
-    font-weight: bold;
-    cursor: pointer;
-    background: linear-gradient(160deg, #5a00a8, #b266ff);
-    color: white;
-    font-size: 16px;
-    transition: 0.3s;
+    width: 80%;
+    text-align: center;
 }
-button:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-.linkBtn { background: transparent; color: #ffb3ff; font-size: 14px; }
 
-/* MAIN SCREENS */
+/* Link Button */
+.linkBtn {
+    background: none;
+    color: #ffebfe;
+    text-decoration: underline;
+}
+
+/* --- MAIN SCREENS --- */
 .mainScreen {
     width: 100%;
-    max-width: 600px;
-    margin-bottom: 60px;
+    flex: 1;
     overflow-y: auto;
-    max-height: calc(100vh - 80px);
+    padding-bottom: 80px; /* for bottom nav */
 }
 
-/* POSTS, VIDEOS, PLACEHOLDERS */
-.post, .videoPost, .marketItem, .placeholder {
-    background: #5a00a8;
-    margin: 10px;
-    padding: 15px;
+/* --- POSTS --- */
+.post, .videoPost, .marketItem {
+    background: rgba(255, 255, 255, 0.05);
+    margin: 10px auto;
     border-radius: 20px;
-    min-height: 100px;
+    width: 90%;
+    height: 150px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    font-size: 14px;
-    color: #d1b3ff;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    justify-content: center;
+    color: #ddd;
+    font-weight: bold;
 }
 
-/* MARKETPLACE */
-.marketGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top:10px; }
-.marketItem { display: flex; flex-direction: column; align-items: center; min-height:150px; }
-.marketItem img { width:100%; height:100px; object-fit:cover; border-radius:10px; margin-bottom:5px; }
+/* --- PLACEHOLDER --- */
+.placeholder {
+    background: rgba(255,255,255,0.1);
+    border: 1px dashed #d1b3ff;
+}
 
-/* MESSAGING */
-.userList { display: flex; flex-direction: column; width:100%; }
-.userBtn { background:#5a00a8; margin:5px 0; padding:10px; border-radius:10px; cursor:pointer; text-align:left; }
-.chatScreen { display:flex; flex-direction:column; width:100%; }
-.chatMessages { flex:1; max-height:300px; overflow-y:auto; margin-bottom:5px; }
-.messageBubble { padding:8px 12px; border-radius:15px; margin:5px; max-width:70%; }
-.messageBubble.you { background:#b266ff; align-self:flex-end; }
-.messageBubble.other { background:#7a00cc55; align-self:flex-start; }
+/* --- UPLOAD AREA --- */
+.uploadArea {
+    background: rgba(255,255,255,0.1);
+    border: 2px dashed #d1b3ff;
+    width: 90%;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+    border-radius: 20px;
+    cursor: pointer;
+}
 
-/* PROFILE */
-#profileHeader { display:flex; flex-direction:column; align-items:center; margin-bottom:20px; }
-.avatarLarge { width:100px; height:100px; border-radius:50%; margin-bottom:10px; border:3px solid #b266ff; }
-.postsGallery { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; width:100%; margin-top:10px; max-height:300px; overflow-y:auto; }
-.postsGallery img, .postsGallery video, .postsGallery .placeholder { width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:10px; border:2px solid #d1b3ff; background-color:#7a00cc55; display:flex; justify-content:center; align-items:center; font-size:12px; color:#d1b3ff; }
+#uploadPreview img {
+    width: 100%;
+    max-height: 200px;
+    border-radius: 20px;
+    margin-top: 10px;
+}
 
-/* BOTTOM NAVIGATION */
-#bottomNav { position:fixed; bottom:0; width:100%; display:flex; justify-content:space-around; background:#4b0082; padding:10px 0; border-top-left-radius:20px; border-top-right-radius:20px; }
-#bottomNav button { background:none; border:none; cursor:pointer; }
-#bottomNav svg { width:28px; height:28px; }
-#bottomNav button:hover svg { stroke:#fff; }
+/* --- MARKETPLACE --- */
+.marketGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+    padding: 10px;
+}
+
+/* --- MESSAGING --- */
+.userList .userBtn {
+    background: rgba(255,255,255,0.1);
+    margin: 5px;
+    padding: 10px;
+    border-radius: 15px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.chatScreen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.chatMessages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.messageBubble {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 15px;
+    max-width: 70%;
+}
+
+.messageBubble.you { background: #9d7aff; align-self: flex-end; }
+.messageBubble.other { background: #6a0dad; align-self: flex-start; }
+
+/* --- PROFILE --- */
+#profileHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.avatarLarge {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid #d1b3ff;
+    margin-bottom: 10px;
+}
+
+.editBtn {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 15px;
+    margin: 5px;
+}
+
+/* PROFILE POSTS */
+.postsGallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    width: 100%;
+}
+
+.postsGallery .placeholder {
+    height: 100px;
+    background: rgba(255,255,255,0.05);
+}
+
+/* --- BOTTOM NAV --- */
+#bottomNav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    background: linear-gradient(160deg, #7209b7, #3c096c);
+    padding: 10px 0;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.navBtn svg {
+    width: 30px;
+    height: 30px;
+}
