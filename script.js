@@ -1,196 +1,129 @@
-// ===== Screen Navigation =====
-function showScreen(screen) {
-    document.querySelectorAll('.mainScreen').forEach(s => s.classList.add('hidden'));
-    document.getElementById(screen).classList.remove('hidden');
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💜 Buzzify</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-// ===== Login / Signup =====
-function showLogin() {
-    document.getElementById('signupPage').classList.add('hidden');
-    document.getElementById('loginPage').classList.remove('hidden');
-}
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="screen">
+    <h1>💜 Buzzify</h1>
+    <h2>Login</h2>
+    <input id="loginUser" type="text" placeholder="Username">
+    <input id="loginPass" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <button class="linkBtn" onclick="showSignup()">Create Account</button>
+</div>
 
-function showSignup() {
-    document.getElementById('loginPage').classList.add('hidden');
-    document.getElementById('signupPage').classList.remove('hidden');
-}
+<!-- SIGNUP PAGE -->
+<div id="signupPage" class="screen hidden">
+    <h1>💜 Buzzify</h1>
+    <h2>Create Account</h2>
+    <input id="newUser" type="text" placeholder="Username">
+    <input id="newPass" type="password" placeholder="Password">
+    <input id="newBio" type="text" placeholder="Short Bio">
+    <button onclick="signup()">Sign Up</button>
+    <button class="linkBtn" onclick="showLogin()">Back to Login</button>
+</div>
 
-function login() {
-    const username = document.getElementById('loginUser').value;
-    const password = document.getElementById('loginPass').value;
-    if (!username || !password) return alert("Enter username and password");
+<!-- MAIN APP -->
+<div id="appPage" class="screen hidden">
 
-    const storedPass = localStorage.getItem(username);
-    if (storedPass && storedPass === password) {
-        localStorage.setItem('currentUser', username);
-        document.getElementById('loginPage').classList.add('hidden');
-        document.getElementById('appPage').classList.remove('hidden');
-        loadFeeds();
-        loadProfile();
-    } else {
-        alert("Invalid credentials");
-    }
-}
+    <!-- HOME SCREEN -->
+    <div id="homeScreen" class="mainScreen">
+        <div id="homeFeed"></div>
+    </div>
 
-function signup() {
-    const username = document.getElementById('newUser').value;
-    const password = document.getElementById('newPass').value;
-    const bio = document.getElementById('newBio').value;
+    <!-- VIDEOS SCREEN -->
+    <div id="videosScreen" class="mainScreen hidden">
+        <div id="videoFeed"></div>
+    </div>
 
-    if (!username || !password) return alert("Enter username and password");
+    <!-- UPLOAD SCREEN -->
+    <div id="uploadScreen" class="mainScreen hidden">
+        <div id="uploadArea" class="uploadArea" onclick="document.getElementById('uploadFile').click()">
+            <input type="file" id="uploadFile" accept="image/*,video/*" hidden onchange="uploadPost()">
+        </div>
+        <div id="uploadPreview" class="postsGallery"></div>
+    </div>
 
-    if (localStorage.getItem(username)) {
-        alert("Username already exists");
-        return;
-    }
+    <!-- MARKETPLACE SCREEN -->
+    <div id="marketScreen" class="mainScreen hidden">
+        <div id="marketUploadArea" class="uploadArea" onclick="document.getElementById('itemPhoto').click()">
+            <input type="file" id="itemPhoto" accept="image/*" hidden>
+        </div>
+        <input type="text" id="itemName" placeholder="Item Name">
+        <input type="number" id="itemPrice" placeholder="Price">
+        <button onclick="addItem()">List Item</button>
+        <div id="marketFeed" class="postsGallery"></div>
+    </div>
 
-    localStorage.setItem(username, password);
-    localStorage.setItem(username + "_bio", bio);
-    showLogin();
-    alert("Account created, please login");
-}
+    <!-- MESSAGES SCREEN -->
+    <div id="messagesScreen" class="mainScreen hidden">
+        <div id="userList" class="userList"></div>
+        <div id="chatScreen" class="chatScreen hidden">
+            <button onclick="closeChat()">← Back</button>
+            <h3 id="chatUser"></h3>
+            <div id="chatMessages" class="chatMessages"></div>
+            <input id="chatInput" type="text" placeholder="Type a message">
+            <button onclick="sendChatMessage()">Send</button>
+        </div>
+    </div>
 
-// ===== Load Feeds (shimmer boxes) =====
-function loadFeeds() {
-    const homeFeed = document.getElementById('homeFeed');
-    const videoFeed = document.getElementById('videoFeed');
-    const marketFeed = document.getElementById('marketFeed');
-    const profilePosts = document.getElementById('profilePosts');
+    <!-- PROFILE SCREEN -->
+    <div id="profileScreen" class="mainScreen hidden">
+        <div id="profileHeader">
+            <img id="profileAvatar" src="https://i.ibb.co/6NX5vTq/default-avatar.png" class="avatarLarge">
+            <button class="editBtn" onclick="updateProfilePic()">Change Profile Picture</button>
+            <h3 id="profileUsername"></h3>
+            <p id="profileBioText"></p>
+            <button class="editBtn" onclick="editBio()">Edit Bio</button>
+        </div>
+        <div id="profilePosts" class="postsGallery"></div>
+    </div>
 
-    [homeFeed, videoFeed, marketFeed, profilePosts].forEach(feed => feed.innerHTML = "");
+    <!-- BOTTOM NAVIGATION -->
+    <div id="bottomNav">
+        <button onclick="showScreen('homeScreen')" class="navBtn" title="Home">
+            <svg width="24" height="24" fill="none" stroke="#dcd6f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9L12 2l9 7v11a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-5H9v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9z"/>
+            </svg>
+        </button>
+        <button onclick="showScreen('videosScreen')" class="navBtn" title="Videos">
+            <svg width="24" height="24" fill="none" stroke="#dcd6f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+        </button>
+        <button onclick="showScreen('uploadScreen')" class="navBtn" title="Upload">
+            <svg width="24" height="24" fill="none" stroke="#dcd6f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+        </button>
+        <button onclick="showScreen('marketScreen')" class="navBtn" title="Marketplace">
+            <svg width="24" height="24" fill="none" stroke="#dcd6f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="M3 9h18"/>
+            </svg>
+        </button>
+        <button onclick="showScreen('messagesScreen')" class="navBtn" title="Messages">
+            <svg width="24" height="24" fill="none" stroke="#dcd6f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z"/>
+            </svg>
+        </button>
+        <button onclick="showScreen('profileScreen')" class="navBtn" title="Profile">
+            <svg width="24" height="24" fill="none" stroke="#dcd6f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="7" r="4"/>
+                <path d="M5.5 21a6.5 6.5 0 0 1 13 0"/>
+            </svg>
+        </button>
+    </div>
 
-    for (let i = 0; i < 6; i++) {
-        const box1 = document.createElement('div'); box1.className = "loadingBox";
-        const box2 = document.createElement('div'); box2.className = "loadingBox";
-        const box3 = document.createElement('div'); box3.className = "loadingBox";
-        const box4 = document.createElement('div'); box4.className = "loadingBox";
+</div>
 
-        homeFeed.appendChild(box1.cloneNode());
-        videoFeed.appendChild(box2.cloneNode());
-        marketFeed.appendChild(box3.cloneNode());
-        profilePosts.appendChild(box4.cloneNode());
-    }
-}
-
-// ===== Profile =====
-function loadProfile() {
-    const username = localStorage.getItem('currentUser');
-    if (!username) return;
-    document.getElementById('profileUsername').innerText = username;
-    document.getElementById('profileBioText').innerText = localStorage.getItem(username + "_bio") || "";
-}
-
-function editBio() {
-    const newBio = prompt("Edit your bio:", document.getElementById('profileBioText').innerText);
-    if (!newBio) return;
-    const username = localStorage.getItem('currentUser');
-    localStorage.setItem(username + "_bio", newBio);
-    loadProfile();
-}
-
-function updateProfilePic() {
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = 'image/*';
-    fileInput.onchange = () => {
-        const file = fileInput.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-            document.getElementById('profileAvatar').src = reader.result;
-        };
-        reader.readAsDataURL(file);
-    };
-    fileInput.click();
-}
-
-// ===== Upload Posts =====
-function uploadPost() {
-    const fileInput = document.getElementById('uploadFile');
-    const preview = document.getElementById('uploadPreview');
-    const file = fileInput.files[0];
-    if (!file) return alert("No file selected");
-    const reader = new FileReader();
-    reader.onload = () => {
-        const div = document.createElement('div');
-        div.className = "loadingBox";
-        div.style.backgroundImage = `url(${reader.result})`;
-        div.style.backgroundSize = 'cover';
-        div.style.backgroundPosition = 'center';
-        preview.appendChild(div);
-    };
-    reader.readAsDataURL(file);
-}
-
-// ===== Marketplace =====
-function addItem() {
-    const fileInput = document.getElementById('itemPhoto');
-    const name = document.getElementById('itemName').value;
-    const price = document.getElementById('itemPrice').value;
-
-    if (!fileInput.files[0] || !name || !price) return alert("Complete all fields");
-
-    const reader = new FileReader();
-    reader.onload = () => {
-        const div = document.createElement('div');
-        div.className = "loadingBox";
-        div.style.backgroundImage = `url(${reader.result})`;
-        div.style.backgroundSize = 'cover';
-        div.style.backgroundPosition = 'center';
-        marketFeed.appendChild(div);
-    };
-    reader.readAsDataURL(fileInput.files[0]);
-}
-
-// ===== Messaging =====
-function sendChatMessage() {
-    const chatInput = document.getElementById('chatInput');
-    const msg = chatInput.value.trim();
-    if (!msg) return;
-    const chatMessages = document.getElementById('chatMessages');
-    const div = document.createElement('div');
-    div.innerText = msg;
-    div.style.backgroundColor = '#ba68c8';
-    div.style.padding = '5px 10px';
-    div.style.borderRadius = '10px';
-    div.style.margin = '5px 0';
-    chatMessages.appendChild(div);
-    chatInput.value = '';
-}
-
-function openChat(user) {
-    document.getElementById('chatUser').innerText = user;
-    document.getElementById('chatScreen').classList.remove('hidden');
-    document.getElementById('userList').classList.add('hidden');
-}
-
-function closeChat() {
-    document.getElementById('chatScreen').classList.add('hidden');
-    document.getElementById('userList').classList.remove('hidden');
-}
-
-// ===== Dummy Users for Messaging =====
-function loadUsers() {
-    const userList = document.getElementById('userList');
-    userList.innerHTML = '';
-    const current = localStorage.getItem('currentUser');
-    const users = ['Alice', 'Bob', 'Charlie', 'Dave', current]; // dummy
-    users.forEach(u => {
-        if (u === current) return;
-        const btn = document.createElement('button');
-        btn.innerText = u;
-        btn.onclick = () => openChat(u);
-        userList.appendChild(btn);
-    });
-}
-
-// ===== Initial Load =====
-document.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('currentUser')) {
-        document.getElementById('loginPage').classList.add('hidden');
-        document.getElementById('appPage').classList.remove('hidden');
-        loadFeeds();
-        loadProfile();
-        loadUsers();
-    }
-});
+<script src="script.js"></script>
+</body>
+</html>
