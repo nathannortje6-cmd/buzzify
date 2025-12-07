@@ -36,10 +36,9 @@
     <div id="homeScreen" class="mainScreen">
         <h2>Home Feed</h2>
         <div id="homeFeed">
-            <!-- Placeholder posts -->
-            <div class="post placeholder"></div>
-            <div class="post placeholder"></div>
-            <div class="post placeholder"></div>
+            <div class="post placeholder">Photo/Video Placeholder</div>
+            <div class="post placeholder">Photo/Video Placeholder</div>
+            <div class="post placeholder">Photo/Video Placeholder</div>
         </div>
     </div>
 
@@ -47,9 +46,9 @@
     <div id="videosScreen" class="mainScreen hidden">
         <h2>Videos</h2>
         <div id="videoFeed">
-            <div class="videoPost placeholder"></div>
-            <div class="videoPost placeholder"></div>
-            <div class="videoPost placeholder"></div>
+            <div class="videoPost placeholder">Video Placeholder</div>
+            <div class="videoPost placeholder">Video Placeholder</div>
+            <div class="videoPost placeholder">Video Placeholder</div>
         </div>
     </div>
 
@@ -66,23 +65,27 @@
         <h2>Marketplace</h2>
         <input type="text" id="itemName" placeholder="Item Name">
         <input type="number" id="itemPrice" placeholder="Price">
+        <input type="file" id="itemPhoto" accept="image/*">
         <button onclick="addItem()">List Item</button>
-        <div id="marketFeed">
-            <!-- Placeholder market items -->
-            <div class="marketItem placeholder"></div>
-            <div class="marketItem placeholder"></div>
-            <div class="marketItem placeholder"></div>
-            <div class="marketItem placeholder"></div>
+        <div id="marketFeed" class="marketGrid">
+            <div class="marketItem placeholder">Item</div>
+            <div class="marketItem placeholder">Item</div>
+            <div class="marketItem placeholder">Item</div>
+            <div class="marketItem placeholder">Item</div>
         </div>
     </div>
 
     <!-- MESSAGES SCREEN -->
     <div id="messagesScreen" class="mainScreen hidden">
         <h2>Messages</h2>
-        <input id="msgUser" type="text" placeholder="Send to username">
-        <input id="msgText" type="text" placeholder="Message">
-        <button onclick="sendMessage()">Send</button>
-        <div id="messageFeed"></div>
+        <div id="userList" class="userList"></div>
+        <div id="chatScreen" class="chatScreen hidden">
+            <button onclick="closeChat()">← Back</button>
+            <h3 id="chatUser"></h3>
+            <div id="chatMessages" class="chatMessages"></div>
+            <input id="chatInput" type="text" placeholder="Type a message">
+            <button onclick="sendChatMessage()">Send</button>
+        </div>
     </div>
 
     <!-- PROFILE SCREEN -->
@@ -100,7 +103,6 @@
         </div>
         <h3>Your Posts</h3>
         <div id="profilePosts" class="postsGallery">
-            <div class="placeholder"></div>
             <div class="placeholder"></div>
             <div class="placeholder"></div>
             <div class="placeholder"></div>
