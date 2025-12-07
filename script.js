@@ -61,9 +61,6 @@ function showScreen(screenId){
     const screens = document.querySelectorAll('.mainScreen');
     screens.forEach(s=>s.classList.add('hidden'));
     document.getElementById(screenId).classList.remove('hidden');
-
-    // Pause all videos except visible screen
-    document.querySelectorAll('video').forEach(v=>v.pause());
 }
 
 // ---------------- PROFILE ----------------
@@ -116,7 +113,6 @@ function uploadPost(){
     fileInput.value = "";
 }
 
-// ---------------- HOME FEED ----------------
 function renderHomeFeed(){
     const feed = document.getElementById('homeFeed');
     const posts = JSON.parse(localStorage.getItem("buzzify_posts")||"[]");
@@ -127,7 +123,7 @@ function renderHomeFeed(){
         }
     } else {
         posts.forEach(p=>{
-            feed.innerHTML += `<div class="post" style="opacity:0; animation:fadeIn 0.5s forwards;">
+            feed.innerHTML += `<div class="post">
                 <img src="${p.src}">
                 <div style="display:flex; justify-content:space-between; width:90%; margin-top:5px;">
                     <span>❤️</span><span>💬</span>
@@ -137,7 +133,6 @@ function renderHomeFeed(){
     }
 }
 
-// ---------------- VIDEO FEED ----------------
 function renderVideoFeed(){
     const feed = document.getElementById('videoFeed');
     const posts = JSON.parse(localStorage.getItem("buzzify_posts")||"[]");
@@ -147,30 +142,15 @@ function renderVideoFeed(){
             feed.innerHTML += '<div class="videoPost placeholder">Video Placeholder</div>';
         }
     } else {
-        posts.forEach((p, idx)=>{
-            feed.innerHTML += `<div class="videoPost" style="opacity:0; animation:fadeIn 0.5s forwards; animation-delay:${idx*0.2}s;">
-                <video src="${p.src}" controls loop muted playsinline style="width:100%; border-radius:15px;"></video>
+        posts.forEach(p=>{
+            feed.innerHTML += `<div class="videoPost">
+                <video src="${p.src}" controls style="width:100%; border-radius:15px;"></video>
                 <div style="display:flex; justify-content:space-between; width:90%; margin-top:5px;">
                     <span>❤️</span><span>💬</span>
                 </div>
             </div>`;
         });
-        observeVideos();
     }
-}
-
-// ---------------- OBSERVE VIDEOS FOR AUTOPLAY ----------------
-function observeVideos(){
-    const videos = document.querySelectorAll("#videoFeed video");
-    const options = { root: document.getElementById("videosScreen"), threshold: 0.5 };
-    const observer = new IntersectionObserver(entries=>{
-        entries.forEach(entry=>{
-            if(entry.isIntersecting){ entry.target.play(); }
-            else { entry.target.pause(); }
-        });
-    }, options);
-
-    videos.forEach(v=>observer.observe(v));
 }
 
 // ---------------- PROFILE POSTS ----------------
@@ -197,8 +177,8 @@ function loadMarket(){
     if(items.length===0){
         for(let i=0;i<3;i++){ feed.innerHTML += '<div class="marketItem placeholder">Item</div>'; }
     } else {
-        items.forEach((i,idx)=>{
-            feed.innerHTML += `<div class="marketItem" style="opacity:0; animation:fadeIn 0.4s forwards; animation-delay:${idx*0.2}s;">
+        items.forEach(i=>{
+            feed.innerHTML += `<div class="marketItem">
                 <img src="${i.photo}">
                 <strong>${i.name}</strong>
                 <span>$${i.price}</span>
