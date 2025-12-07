@@ -1,62 +1,68 @@
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #f2e6ff;
-  color: #4b0082;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(160deg, #2b003a, #7a00cc, #d18fff);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-header {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  background: #d8b3ff;
-  color: white;
+.container {
+    width: 90%;
+    max-width: 400px;
+    padding: 25px;
+    border-radius: 25px;
+    background: linear-gradient(160deg, #4b0082, #a64dff);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h2 { margin-bottom: 20px; font-size: 26px; text-align: center; color: #f5e6ff; }
+
+input, textarea {
+    width: 100%;
+    padding: 14px;
+    margin: 10px 0;
+    border-radius: 15px;
+    border: none;
+    font-size: 16px;
+    outline: none;
+    background: #d9b3ff;
+    color: #3b0066;
 }
 
 button {
-  padding: 5px 10px;
-  margin: 5px;
-  background: #a64ca6;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    border-radius: 15px;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    background: linear-gradient(160deg, #5a00a8, #b266ff);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: all 0.2s;
 }
+button:hover { transform: scale(1.05); }
 
-button:hover {
-  background: #852d85;
-}
-
-input, textarea {
-  display: block;
-  width: 90%;
-  margin: 5px auto;
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
+.linkBtn { background: none; border: none; color: #ffd1ff; margin-top: 10px; font-size: 15px; text-decoration: underline; }
 .hidden { display: none; }
-.screen { text-align: center; padding: 20px; }
 
-.post, #messages-list div, #market-list div {
-  border: 1px solid #ccc;
-  padding: 8px;
-  margin: 5px auto;
-  width: 90%;
-  border-radius: 5px;
-  background: white;
+.post {
+    width: 100%;
+    background: #5a00a8;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
-
-/* Dark Mode */
-.dark-mode {
-  background: #2b003a;
-  color: #d1c4e9;
-}
-.dark-mode header { background: #4b0082; }
-.dark-mode button { background: #6a1b9a; }
-.dark-mode .post, .dark-mode #messages-list div, .dark-mode #market-list div {
-  background: #4a0072;
-  color: #d1c4e9;
-}
+.post b { display: block; margin-bottom: 5px; font-size: 16px; }
+.post small { font-size: 12px; color: #ffd1ff; }
+textarea { resize: none; }
