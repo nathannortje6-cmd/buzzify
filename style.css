@@ -1,201 +1,131 @@
-/* --- GLOBAL --- */
-body, html {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(160deg, #3c096c, #7209b7);
-    color: #fff;
-    height: 100%;
-    overflow-x: hidden;
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #2c003e, #7e57c2);
+    color:white;
 }
 
-.screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 20px;
-    height: 100vh;
-    width: 100vw;
+.screen{
+    padding:20px;
 }
 
-.hidden { display: none; }
-
-h1, h2, h3 {
-    margin: 10px 0;
+.hidden{
+    display:none;
 }
 
-button {
-    background: linear-gradient(90deg, #d0b3ff, #9d7aff);
-    border: none;
-    color: #fff;
-    padding: 10px 20px;
-    margin: 5px;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: 0.2s;
-    font-weight: bold;
+input, textarea{
+    display:block;
+    margin:10px 0;
+    padding:10px;
+    border-radius:10px;
+    border:none;
+    width:90%;
 }
 
-button:hover { opacity: 0.9; }
-
-input[type=text], input[type=password], input[type=number] {
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 15px;
-    border: none;
-    width: 80%;
-    text-align: center;
+button{
+    padding:10px 20px;
+    border-radius:10px;
+    border:none;
+    background-color:#ba68c8;
+    color:white;
+    margin:5px 0;
+    cursor:pointer;
+    transition: 0.3s;
 }
 
-/* Link Button */
-.linkBtn {
-    background: none;
-    color: #ffebfe;
-    text-decoration: underline;
+button:hover{
+    background-color:#ab47bc;
 }
 
-/* --- MAIN SCREENS --- */
-.mainScreen {
-    width: 100%;
-    flex: 1;
-    overflow-y: auto;
-    padding-bottom: 80px; /* for bottom nav */
+/* TOP BAR GRADIENT */
+#topBar{
+    background: linear-gradient(to right, #7e57c2, #ab47bc);
+    padding:15px;
+    text-align:center;
+    font-size:1.5em;
+    font-weight:bold;
+    border-bottom-left-radius:20px;
+    border-bottom-right-radius:20px;
 }
 
-/* --- POSTS --- */
-.post, .videoPost, .marketItem {
-    background: rgba(255, 255, 255, 0.05);
-    margin: 10px auto;
-    border-radius: 20px;
-    width: 90%;
-    height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ddd;
-    font-weight: bold;
+/* NAVBAR */
+#navbar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background: linear-gradient(to right, #7e57c2, #ab47bc);
+    display:flex;
+    justify-content:space-around;
+    padding:10px 0;
+    backdrop-filter: blur(5px);
+    border-top-left-radius:20px;
+    border-top-right-radius:20px;
 }
 
-/* --- PLACEHOLDER --- */
-.placeholder {
+/* MAIN SCREENS */
+.mainScreen{
+    margin-bottom:100px;
+}
+
+#homeFeed .post, #videoFeed .videoPost, #marketFeed .marketItem, #profilePosts div{
+    margin:10px 0;
+    padding:10px;
     background: rgba(255,255,255,0.1);
-    border: 1px dashed #d1b3ff;
+    border-radius:15px;
+    position:relative;
+    overflow:hidden;
 }
 
-/* --- UPLOAD AREA --- */
-.uploadArea {
-    background: rgba(255,255,255,0.1);
-    border: 2px dashed #d1b3ff;
-    width: 90%;
-    height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 10px 0;
-    border-radius: 20px;
-    cursor: pointer;
+/* LOADING ANIMATION */
+.post.loading, .videoPost.loading, .marketItem.loading, #profilePosts div.loading{
+    height:150px;
+    background: linear-gradient(-90deg, #4a148c 0%, #7e57c2 50%, #4a148c 100%);
+    background-size: 400% 400%;
+    animation: shimmer 1.5s ease-in-out infinite;
 }
 
-#uploadPreview img {
-    width: 100%;
-    max-height: 200px;
-    border-radius: 20px;
-    margin-top: 10px;
+@keyframes shimmer {
+    0%{background-position:200% 0;}
+    100%{background-position:-200% 0;}
 }
 
-/* --- MARKETPLACE --- */
-.marketGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 10px;
-    padding: 10px;
+#homeFeed .post img, #videoFeed .videoPost video, #profilePosts div img, #marketFeed .marketItem img{
+    width:100%;
+    border-radius:15px;
 }
 
-/* --- MESSAGING --- */
-.userList .userBtn {
-    background: rgba(255,255,255,0.1);
-    margin: 5px;
-    padding: 10px;
-    border-radius: 15px;
-    cursor: pointer;
-    text-align: center;
+#profileAvatar{
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    cursor:pointer;
 }
 
-.chatScreen {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+.messageBubble{
+    margin:5px;
+    padding:10px;
+    border-radius:10px;
 }
 
-.chatMessages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 10px;
+.messageBubble.you{
+    background-color: #7e57c2;
+    align-self:flex-end;
 }
 
-.messageBubble {
-    padding: 10px;
-    margin: 5px;
-    border-radius: 15px;
-    max-width: 70%;
+.messageBubble.other{
+    background-color: #ab47bc;
+    align-self:flex-start;
 }
 
-.messageBubble.you { background: #9d7aff; align-self: flex-end; }
-.messageBubble.other { background: #6a0dad; align-self: flex-start; }
-
-/* --- PROFILE --- */
-#profileHeader {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 10px;
+#chatMessages{
+    max-height:300px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
 }
 
-.avatarLarge {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 2px solid #d1b3ff;
-    margin-bottom: 10px;
-}
-
-.editBtn {
-    background: rgba(255,255,255,0.1);
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 15px;
-    margin: 5px;
-}
-
-/* PROFILE POSTS */
-.postsGallery {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 5px;
-    width: 100%;
-}
-
-.postsGallery .placeholder {
-    height: 100px;
-    background: rgba(255,255,255,0.05);
-}
-
-/* --- BOTTOM NAV --- */
-#bottomNav {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    background: linear-gradient(160deg, #7209b7, #3c096c);
-    padding: 10px 0;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-}
-
-.navBtn svg {
-    width: 30px;
-    height: 30px;
+@keyframes fadeIn{
+    from{opacity:0;}
+    to{opacity:1;}
 }
