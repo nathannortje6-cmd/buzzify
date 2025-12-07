@@ -55,20 +55,24 @@
     <!-- UPLOAD SCREEN -->
     <div id="uploadScreen" class="mainScreen hidden">
         <h2>Upload</h2>
-        <input type="file" id="uploadFile" accept="image/*,video/*">
-        <button onclick="uploadPost()">Upload</button>
+        <div id="uploadArea" class="uploadArea" onclick="document.getElementById('uploadFile').click()">
+            <p>Click or drag & drop to upload</p>
+            <input type="file" id="uploadFile" accept="image/*,video/*" hidden onchange="uploadPost()">
+        </div>
         <div id="uploadPreview"></div>
     </div>
 
     <!-- MARKETPLACE SCREEN -->
     <div id="marketScreen" class="mainScreen hidden">
         <h2>Marketplace</h2>
+        <div id="marketUploadArea" class="uploadArea" onclick="document.getElementById('itemPhoto').click()">
+            <p>Click to add item photo</p>
+            <input type="file" id="itemPhoto" accept="image/*" hidden>
+        </div>
         <input type="text" id="itemName" placeholder="Item Name">
         <input type="number" id="itemPrice" placeholder="Price">
-        <input type="file" id="itemPhoto" accept="image/*">
         <button onclick="addItem()">List Item</button>
         <div id="marketFeed" class="marketGrid">
-            <div class="marketItem placeholder">Item</div>
             <div class="marketItem placeholder">Item</div>
             <div class="marketItem placeholder">Item</div>
             <div class="marketItem placeholder">Item</div>
@@ -93,17 +97,13 @@
         <h2>Profile</h2>
         <div id="profileHeader">
             <img id="profileAvatar" src="https://i.ibb.co/6NX5vTq/default-avatar.png" class="avatarLarge">
+            <button class="editBtn" onclick="updateProfilePic()">Change Profile Picture</button>
             <h3 id="profileUsername"></h3>
             <p id="profileBioText"></p>
-        </div>
-        <div id="profileEdit">
-            <input id="profilePic" type="text" placeholder="Profile pic URL">
-            <input id="profileBio" type="text" placeholder="Bio">
-            <button onclick="updateProfile()">Update Profile</button>
+            <button class="editBtn" onclick="editBio()">Edit Bio</button>
         </div>
         <h3>Your Posts</h3>
         <div id="profilePosts" class="postsGallery">
-            <div class="placeholder"></div>
             <div class="placeholder"></div>
             <div class="placeholder"></div>
             <div class="placeholder"></div>
