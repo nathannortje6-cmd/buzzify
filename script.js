@@ -1,129 +1,321 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💜 Buzzify</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+// ===== Local Storage Keys =====
+const USERS_KEY = 'buzzify_users';
+const POSTS_KEY = 'buzzify_posts';
+const MARKET_KEY = 'buzzify_market';
 
-<!-- LOGIN PAGE -->
-<div id="loginPage" class="screen">
-    <h1>💜 Buzzify</h1>
-    <h2>Login</h2>
-    <input id="loginUser" type="text" placeholder="Username">
-    <input id="loginPass" type="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-    <button class="linkBtn" onclick="showSignup()">Create Account</button>
-</div>
+// ===== Helper Functions =====
+function getUsers() {
+    return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+}
 
-<!-- SIGNUP PAGE -->
-<div id="signupPage" class="screen hidden">
-    <h1>💜 Buzzify</h1>
-    <h2>Create Account</h2>
-    <input id="newUser" type="text" placeholder="Username">
-    <input id="newPass" type="password" placeholder="Password">
-    <input id="newBio" type="text" placeholder="Short Bio">
-    <button onclick="signup()">Sign Up</button>
-    <button class="linkBtn" onclick="showLogin()">Back to Login</button>
-</div>
+function saveUsers(users) {
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
 
-<!-- MAIN APP -->
-<div id="appPage" class="screen hidden">
+function getPosts() {
+    return JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
+}
 
-    <!-- HOME SCREEN -->
-    <div id="homeScreen" class="mainScreen">
-        <div id="homeFeed"></div>
-    </div>
+function savePosts(posts) {
+    localStorage.setItem(POSTS_KEY, JSON.stringify(posts));
+}
 
-    <!-- VIDEOS SCREEN -->
-    <div id="videosScreen" class="mainScreen hidden">
-        <div id="videoFeed"></div>
-    </div>
+function getMarketItems() {
+    return JSON.parse(localStorage.getItem(MARKET_KEY)) || [];
+}
 
-    <!-- UPLOAD SCREEN -->
-    <div id="uploadScreen" class="mainScreen hidden">
-        <div id="uploadArea" class="uploadArea" onclick="document.getElementById('uploadFile').click()">
-            <input type="file" id="uploadFile" accept="image/*,video/*" hidden onchange="uploadPost()">
-        </div>
-        <div id="uploadPreview" class="postsGallery"></div>
-    </div>
+function saveMarketItems(items) {
+    localStorage.setItem(MARKET_KEY, JSON.stringify(items));
+}
 
-    <!-- MARKETPLACE SCREEN -->
-    <div id="marketScreen" class="mainScreen hidden">
-        <div id="marketUploadArea" class="uploadArea" onclick="document.getElementById('itemPhoto').click()">
-            <input type="file" id="itemPhoto" accept="image/*" hidden>
-        </div>
-        <input type="text" id="itemName" placeholder="Item Name">
-        <input type="number" id="itemPrice" placeholder="Price">
-        <button onclick="addItem()">List Item</button>
-        <div id="marketFeed" class="postsGallery"></div>
-    </div>
+// ===== Screen Management =====
+function showScreen(screenId) {
+    const screens = document.querySelectorAll('.mainScreen');
+    screens.forEach(s => s.classList.add('hidden'));
+    document.getElementById(screenId).classList.remove('hidden');
+}
 
-    <!-- MESSAGES SCREEN -->
-    <div id="messagesScreen" class="mainScreen hidden">
-        <div id="userList" class="userList"></div>
-        <div id="chatScreen" class="chatScreen hidden">
-            <button onclick="closeChat()">← Back</button>
-            <h3 id="chatUser"></h3>
-            <div id="chatMessages" class="chatMessages"></div>
-            <input id="chatInput" type="text" placeholder="Type a message">
-            <button onclick="sendChatMessage()">Send</button>
-        </div>
-    </div>
+// ===== Login / Signup =====
+let currentUser = null;
 
-    <!-- PROFILE SCREEN -->
-    <div id="profileScreen" class="mainScreen hidden">
-        <div id="profileHeader">
-            <img id="profileAvatar" src="https://i.ibb.co/6NX5vTq/default-avatar.png" class="avatarLarge">
-            <button class="editBtn" onclick="updateProfilePic()">Change Profile Picture</button>
-            <h3 id="profileUsername"></h3>
-            <p id="profileBioText"></p>
-            <button class="editBtn" onclick="editBio()">Edit Bio</button>
-        </div>
-        <div id="profilePosts" class="postsGallery"></div>
-    </div>
+function login() {
+    const username = document.getElementById('loginUser').value.trim();
+    const password = document.getElementById('loginPass').value.trim();
+    const users = getUsers();
 
-    <!-- BOTTOM NAVIGATION -->
-    <div id="bottomNav">
-        <button onclick="showScreen('homeScreen')" class="navBtn" title="Home">
-            <svg width="24" height="24" fill="none" stroke="#dcd6f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 9L12 2l9 7v11a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-5H9v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9z"/>
-            </svg>
-        </button>
-        <button onclick="showScreen('videosScreen')" class="navBtn" title="Videos">
-            <svg width="24" height="24" fill="none" stroke="#dcd6f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="5 3 19 12 5 21 5 3"/>
-            </svg>
-        </button>
-        <button onclick="showScreen('uploadScreen')" class="navBtn" title="Upload">
-            <svg width="24" height="24" fill="none" stroke="#dcd6f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"/>
-                <line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-        </button>
-        <button onclick="showScreen('marketScreen')" class="navBtn" title="Marketplace">
-            <svg width="24" height="24" fill="none" stroke="#dcd6f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                <path d="M3 9h18"/>
-            </svg>
-        </button>
-        <button onclick="showScreen('messagesScreen')" class="navBtn" title="Messages">
-            <svg width="24" height="24" fill="none" stroke="#dcd6f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z"/>
-            </svg>
-        </button>
-        <button onclick="showScreen('profileScreen')" class="navBtn" title="Profile">
-            <svg width="24" height="24" fill="none" stroke="#dcd6f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="7" r="4"/>
-                <path d="M5.5 21a6.5 6.5 0 0 1 13 0"/>
-            </svg>
-        </button>
-    </div>
+    const user = users.find(u => u.username === username && u.password === password);
+    if (user) {
+        currentUser = user;
+        loadApp();
+    } else {
+        alert('Invalid username or password!');
+    }
+}
 
-</div>
+function signup() {
+    const username = document.getElementById('newUser').value.trim();
+    const password = document.getElementById('newPass').value.trim();
+    const bio = document.getElementById('newBio').value.trim();
 
-<script src="script.js"></script>
-</body>
-</html>
+    if (!username || !password) {
+        alert('Username and password required!');
+        return;
+    }
+
+    const users = getUsers();
+    if (users.some(u => u.username === username)) {
+        alert('Username already exists!');
+        return;
+    }
+
+    const newUser = { username, password, bio, avatar: '' };
+    users.push(newUser);
+    saveUsers(users);
+    currentUser = newUser;
+    loadApp();
+}
+
+function showSignup() {
+    document.getElementById('loginPage').classList.add('hidden');
+    document.getElementById('signupPage').classList.remove('hidden');
+}
+
+function showLogin() {
+    document.getElementById('signupPage').classList.add('hidden');
+    document.getElementById('loginPage').classList.remove('hidden');
+}
+
+// ===== Load App =====
+function loadApp() {
+    document.getElementById('loginPage').classList.add('hidden');
+    document.getElementById('signupPage').classList.add('hidden');
+    document.getElementById('appPage').classList.remove('hidden');
+
+    document.getElementById('profileUsername').innerText = currentUser.username;
+    document.getElementById('profileBioText').innerText = currentUser.bio || '';
+    if(currentUser.avatar) document.getElementById('profileAvatar').src = currentUser.avatar;
+
+    renderHome();
+    renderVideos();
+    renderMarket();
+    renderProfilePosts();
+}
+
+// ===== Render Home Feed =====
+function renderHome() {
+    const homeFeed = document.getElementById('homeFeed');
+    homeFeed.innerHTML = '';
+    const posts = getPosts();
+
+    if(posts.length === 0) {
+        // Show shimmer boxes
+        for(let i=0;i<6;i++){
+            const box = document.createElement('div');
+            box.className = 'loadingBox';
+            homeFeed.appendChild(box);
+        }
+    } else {
+        posts.forEach(post => {
+            const div = document.createElement('div');
+            div.className = 'loadingBox';
+            if(post.type === 'image'){
+                const img = document.createElement('img');
+                img.src = post.data;
+                img.style.width = '100%';
+                img.style.borderRadius = '12px';
+                div.innerHTML = '';
+                div.appendChild(img);
+            } else if(post.type === 'video'){
+                const vid = document.createElement('video');
+                vid.src = post.data;
+                vid.controls = true;
+                vid.style.width = '100%';
+                vid.style.borderRadius = '12px';
+                div.innerHTML = '';
+                div.appendChild(vid);
+            }
+            homeFeed.appendChild(div);
+        });
+    }
+}
+
+// ===== Render Videos Feed =====
+function renderVideos() {
+    const videoFeed = document.getElementById('videoFeed');
+    videoFeed.innerHTML = '';
+    const posts = getPosts().filter(p=>p.type==='video');
+
+    if(posts.length === 0){
+        for(let i=0;i<6;i++){
+            const box = document.createElement('div');
+            box.className = 'loadingBox';
+            videoFeed.appendChild(box);
+        }
+    } else {
+        posts.forEach(post=>{
+            const div = document.createElement('div');
+            div.className='loadingBox';
+            const vid = document.createElement('video');
+            vid.src = post.data;
+            vid.controls = true;
+            vid.style.width='100%';
+            vid.style.borderRadius='12px';
+            div.innerHTML = '';
+            div.appendChild(vid);
+            videoFeed.appendChild(div);
+        });
+    }
+}
+
+// ===== Upload Posts =====
+function uploadPost() {
+    const file = document.getElementById('uploadFile').files[0];
+    if(!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e){
+        const posts = getPosts();
+        const type = file.type.startsWith('video') ? 'video' : 'image';
+        posts.unshift({ user: currentUser.username, data: e.target.result, type });
+        savePosts(posts);
+        renderHome();
+        renderVideos();
+        renderProfilePosts();
+    }
+    reader.readAsDataURL(file);
+}
+
+// ===== Render Profile Posts =====
+function renderProfilePosts() {
+    const profilePosts = document.getElementById('profilePosts');
+    profilePosts.innerHTML = '';
+    const posts = getPosts().filter(p=>p.user===currentUser.username);
+    if(posts.length===0){
+        for(let i=0;i<3;i++){
+            const box=document.createElement('div');
+            box.className='loadingBox';
+            profilePosts.appendChild(box);
+        }
+    } else {
+        posts.forEach(post=>{
+            const div=document.createElement('div');
+            div.className='loadingBox';
+            if(post.type==='image'){
+                const img=document.createElement('img');
+                img.src=post.data;
+                img.style.width='100%';
+                img.style.borderRadius='12px';
+                div.innerHTML='';
+                div.appendChild(img);
+            } else {
+                const vid=document.createElement('video');
+                vid.src=post.data;
+                vid.controls=true;
+                vid.style.width='100%';
+                vid.style.borderRadius='12px';
+                div.innerHTML='';
+                div.appendChild(vid);
+            }
+            profilePosts.appendChild(div);
+        });
+    }
+}
+
+// ===== Marketplace =====
+function addItem() {
+    const photo = document.getElementById('itemPhoto').files[0];
+    const name = document.getElementById('itemName').value.trim();
+    const price = document.getElementById('itemPrice').value.trim();
+
+    if(!photo || !name || !price){
+        alert('Complete all fields!');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload=function(e){
+        const items=getMarketItems();
+        items.unshift({user:currentUser.username, name, price, photo:e.target.result});
+        saveMarketItems(items);
+        renderMarket();
+    }
+    reader.readAsDataURL(photo);
+}
+
+function renderMarket(){
+    const marketFeed=document.getElementById('marketFeed');
+    marketFeed.innerHTML='';
+    const items=getMarketItems();
+    if(items.length===0){
+        for(let i=0;i<6;i++){
+            const box=document.createElement('div');
+            box.className='loadingBox';
+            marketFeed.appendChild(box);
+        }
+    } else {
+        items.forEach(item=>{
+            const div=document.createElement('div');
+            div.className='loadingBox';
+            const img=document.createElement('img');
+            img.src=item.photo;
+            img.style.width='100%';
+            img.style.borderRadius='12px';
+            div.innerHTML='';
+            div.appendChild(img);
+            marketFeed.appendChild(div);
+        });
+    }
+}
+
+// ===== Messages (Simplified) =====
+function sendChatMessage() {
+    const input=document.getElementById('chatInput');
+    if(input.value.trim()==='') return;
+    const chatMessages=document.getElementById('chatMessages');
+    const msg=document.createElement('div');
+    msg.innerText=input.value.trim();
+    msg.style.background='#dcd6f7';
+    msg.style.margin='5px';
+    msg.style.padding='5px';
+    msg.style.borderRadius='10px';
+    chatMessages.appendChild(msg);
+    input.value='';
+}
+
+// ===== Profile =====
+function updateProfilePic(){
+    const file=document.createElement('input');
+    file.type='file';
+    file.accept='image/*';
+    file.onchange=function(){
+        const reader=new FileReader();
+        reader.onload=function(e){
+            currentUser.avatar=e.target.result;
+            document.getElementById('profileAvatar').src=currentUser.avatar;
+            const users=getUsers();
+            const idx=users.findIndex(u=>u.username===currentUser.username);
+            users[idx]=currentUser;
+            saveUsers(users);
+        }
+        reader.readAsDataURL(file.files[0]);
+    }
+    file.click();
+}
+
+function editBio(){
+    const newBio=prompt('Enter new bio:', currentUser.bio || '');
+    if(newBio!==null){
+        currentUser.bio=newBio;
+        document.getElementById('profileBioText').innerText=currentUser.bio;
+        const users=getUsers();
+        const idx=users.findIndex(u=>u.username===currentUser.username);
+        users[idx]=currentUser;
+        saveUsers(users);
+    }
+}
+
+// ===== Chat Screen =====
+function closeChat(){
+    document.getElementById('chatScreen').classList.add('hidden');
+    document.getElementById('userList').classList.remove('hidden');
+}
