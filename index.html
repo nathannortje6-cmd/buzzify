@@ -8,7 +8,7 @@
 <body>
 
 <!-- LOGIN PAGE -->
-<div id="loginPage" class="container">
+<div id="loginPage" class="screen">
     <h2>💜 Buzzify Login</h2>
     <input id="loginUser" type="text" placeholder="Username">
     <input id="loginPass" type="password" placeholder="Password">
@@ -17,22 +17,69 @@
 </div>
 
 <!-- SIGNUP PAGE -->
-<div id="signupPage" class="container hidden">
+<div id="signupPage" class="screen hidden">
     <h2>💜 Create Account</h2>
     <input id="newUser" type="text" placeholder="Choose Username">
     <input id="newPass" type="password" placeholder="Choose Password">
+    <input id="newBio" type="text" placeholder="Short Bio">
     <button onclick="signup()">Sign Up</button>
     <button class="linkBtn" onclick="showLogin()">Back to Login</button>
 </div>
 
-<!-- HOME PAGE -->
-<div id="homePage" class="container hidden">
-    <h2>💜 Home Feed</h2>
-    <p id="welcomeText" style="margin-bottom: 20px; text-align:center;"></p>
-    <textarea id="postText" placeholder="Write something..."></textarea>
-    <button onclick="createPost()">Post</button>
-    <div id="feed" style="width:100%; margin-top:20px;"></div>
-    <button style="margin-top:20px;" onclick="logout()">Logout</button>
+<!-- MAIN APP -->
+<div id="appPage" class="screen hidden">
+
+    <!-- Screens -->
+    <div id="homeScreen" class="mainScreen">
+        <h2>Home Feed</h2>
+        <div id="homeFeed"></div>
+    </div>
+
+    <div id="videosScreen" class="mainScreen hidden">
+        <h2>Videos</h2>
+        <div id="videoFeed"></div>
+    </div>
+
+    <div id="uploadScreen" class="mainScreen hidden">
+        <h2>Upload</h2>
+        <input type="file" id="uploadFile" accept="image/*,video/*">
+        <button onclick="uploadPost()">Upload</button>
+    </div>
+
+    <div id="marketScreen" class="mainScreen hidden">
+        <h2>Marketplace</h2>
+        <input type="text" id="itemName" placeholder="Item Name">
+        <input type="number" id="itemPrice" placeholder="Price">
+        <button onclick="addItem()">List Item</button>
+        <div id="marketFeed"></div>
+    </div>
+
+    <div id="messagesScreen" class="mainScreen hidden">
+        <h2>Messages</h2>
+        <input id="msgUser" type="text" placeholder="Send to username">
+        <input id="msgText" type="text" placeholder="Message">
+        <button onclick="sendMessage()">Send</button>
+        <div id="messageFeed"></div>
+    </div>
+
+    <div id="profileScreen" class="mainScreen hidden">
+        <h2>Profile</h2>
+        <input id="profilePic" type="text" placeholder="Profile pic URL">
+        <input id="profileBio" type="text" placeholder="Bio">
+        <button onclick="updateProfile()">Update Profile</button>
+        <div id="profileInfo"></div>
+    </div>
+
+    <!-- Bottom Toolbar -->
+    <div id="bottomNav">
+        <button onclick="showScreen('homeScreen')">🏠</button>
+        <button onclick="showScreen('videosScreen')">🎥</button>
+        <button onclick="showScreen('uploadScreen')">➕</button>
+        <button onclick="showScreen('marketScreen')">🛒</button>
+        <button onclick="showScreen('messagesScreen')">💬</button>
+        <button onclick="showScreen('profileScreen')">👤</button>
+    </div>
+
 </div>
 
 <script src="script.js"></script>
