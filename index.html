@@ -31,26 +31,22 @@
 
         <!-- HOME SCREEN -->
         <div id="homeScreen" class="mainScreen">
-            <h2 class="screenTitle">Home</h2>
             <div id="homeFeed"></div>
         </div>
 
         <!-- VIDEO SCREEN -->
         <div id="videosScreen" class="mainScreen hidden">
-            <h2 class="screenTitle">Videos</h2>
             <div id="videoFeed"></div>
         </div>
 
         <!-- UPLOAD SCREEN -->
         <div id="uploadScreen" class="mainScreen hidden">
-            <h2 class="screenTitle">Upload</h2>
             <input type="file" id="uploadFile">
-            <button onclick="uploadPost()">Upload Post</button>
+            <button onclick="uploadPost()">Upload</button>
         </div>
 
         <!-- MARKETPLACE SCREEN -->
         <div id="marketScreen" class="mainScreen hidden">
-            <h2 class="screenTitle">Marketplace</h2>
             <input type="file" id="itemPhoto">
             <input type="text" id="itemName" placeholder="Item Name">
             <input type="number" id="itemPrice" placeholder="Price">
@@ -70,10 +66,8 @@
 
         <!-- MESSAGES SCREEN -->
         <div id="messagesScreen" class="mainScreen hidden">
-            <h2 class="screenTitle">Messages</h2>
             <div id="userList"></div>
             <div id="chatScreen" class="hidden">
-                <h3 id="chatUser"></h3>
                 <div id="chatMessages"></div>
                 <input id="chatInput" placeholder="Type a message">
                 <button onclick="sendChatMessage()">Send</button>
@@ -83,11 +77,11 @@
 
         <!-- NAVBAR -->
         <div id="navbar">
-            <button onclick="showScreen('homeScreen')">🏠</button>
-            <button onclick="showScreen('videosScreen')">🎥</button>
-            <button onclick="showScreen('uploadScreen')">⬆️</button>
-            <button onclick="showScreen('marketScreen')">🛒</button>
-            <button onclick="showScreen('profileScreen')">👤</button>
+            <button onclick="showScreen('homeScreen')"><span class="icon">🏠</span></button>
+            <button onclick="showScreen('videosScreen')"><span class="icon">🎥</span></button>
+            <button onclick="showScreen('uploadScreen')"><span class="icon">⬆️</span></button>
+            <button onclick="showScreen('marketScreen')"><span class="icon">🛒</span></button>
+            <button onclick="showScreen('profileScreen')"><span class="icon">👤</span></button>
         </div>
     </div>
 
