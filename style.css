@@ -1,122 +1,194 @@
-/* General */
-body {
+/* ===== General Styles ===== */
+* {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #c39bd3; /* solid pink/purple */
-    color: #fff;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body, html {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(to bottom, #f3c6f0, #b06ab3);
+    overflow-x: hidden;
 }
 
 .screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
     padding: 20px;
+    height: 100%;
+    width: 100%;
 }
 
 .hidden {
     display: none;
 }
 
-input, textarea {
-    display: block;
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 12px;
-    border: none;
-    width: 90%;
-    background-color: #d7b4e3;
-    color: #000;
-}
-
+/* ===== Buttons ===== */
 button {
     padding: 10px 20px;
     border-radius: 12px;
     border: none;
-    background-color: #ba68c8;
+    background: #9b59b6;
     color: white;
-    margin: 5px 0;
+    font-size: 16px;
     cursor: pointer;
-    transition: 0.3s;
+    margin: 5px 0;
+    transition: background 0.3s;
 }
 
 button:hover {
-    background-color: #ab47bc;
+    background: #8e44ad;
 }
 
 .linkBtn {
     background: none;
-    border: none;
-    color: #fff;
+    color: white;
     text-decoration: underline;
-    cursor: pointer;
 }
 
-/* Upload Area */
+/* ===== Inputs ===== */
+input[type="text"], input[type="password"], input[type="number"] {
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid #dcd6f7;
+    margin: 5px 0;
+    width: 80%;
+    font-size: 16px;
+}
+
+/* ===== Main Screens ===== */
+.mainScreen {
+    width: 100%;
+    height: calc(100% - 60px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.postsGallery, #homeFeed, #videoFeed, #marketFeed {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    width: 100%;
+    padding: 10px;
+}
+
+/* ===== Loading / Shimmer Boxes ===== */
+.loadingBox {
+    background: #dcd6f7;
+    height: 120px;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.loadingBox::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: -150px;
+    width: 150px;
+    height: 100%;
+    background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+    animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(300px); }
+}
+
+/* ===== Upload Areas ===== */
 .uploadArea {
+    width: 90%;
+    height: 120px;
+    border: 2px dashed #dcd6f7;
+    border-radius: 12px;
+    margin: 10px 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px dashed #fff;
-    border-radius: 15px;
-    height: 150px;
     cursor: pointer;
-    margin: 10px 0;
 }
 
-/* Profile */
-.avatarLarge {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
+/* ===== Profile ===== */
+#profileHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-bottom: 10px;
 }
 
+.avatarLarge {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 2px solid #dcd6f7;
+}
+
 .editBtn {
-    background-color: #d2b4de;
-    color: #000;
+    margin: 5px 0;
+    background: #b06ab3;
+}
+
+/* ===== Messages ===== */
+.userList button {
+    width: 90%;
+    margin: 5px 0;
+    border-radius: 12px;
+    background: #9b59b6;
+    color: white;
+    padding: 10px;
+}
+
+.chatScreen {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+#chatMessages {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
     margin: 5px 0;
 }
 
-/* Posts Galleries */
-.postsGallery, #marketFeed, #homeFeed, #videoFeed {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 10px;
-}
-
-/* Shimmer box animation */
-.loadingBox {
-    width: 100%;
-    padding-bottom: 100%; /* square box */
-    border-radius: 12px;
-    background: linear-gradient(-90deg, #9b59b6 0%, #d2b4de 50%, #9b59b6 100%);
-    background-size: 400% 400%;
-    animation: shimmer 1.5s ease-in-out infinite;
-}
-
-/* Shimmer animation keyframes */
-@keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-}
-
-/* Bottom Navigation */
+/* ===== Bottom Navigation ===== */
 #bottomNav {
     position: fixed;
     bottom: 0;
-    left: 0;
     width: 100%;
-    background: rgba(255,255,255,0.1);
+    height: 60px;
+    background: rgba(155,89,182,0.2);
     display: flex;
     justify-content: space-around;
-    padding: 10px 0;
-    backdrop-filter: blur(5px);
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
+    align-items: center;
+    border-top: 1px solid #dcd6f7;
 }
 
 .navBtn {
-    font-size: 1.5em;
     background: none;
     border: none;
-    color: #dcd6f7; /* light outline */
     cursor: pointer;
+}
+
+.navBtn svg {
+    width: 28px;
+    height: 28px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 500px) {
+    input[type="text"], input[type="password"], input[type="number"] {
+        width: 90%;
+    }
 }
