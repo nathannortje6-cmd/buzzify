@@ -37,35 +37,14 @@ button:hover{
     background-color:#ab47bc;
 }
 
-/* TOP BAR GRADIENT */
-#topBar{
-    background: linear-gradient(to right, #7e57c2, #ab47bc);
-    padding:15px;
+.screenTitle{
     text-align:center;
-    font-size:1.5em;
-    font-weight:bold;
-    border-bottom-left-radius:20px;
-    border-bottom-right-radius:20px;
-}
-
-/* NAVBAR */
-#navbar{
-    position:fixed;
-    bottom:0;
-    left:0;
-    width:100%;
-    background: linear-gradient(to right, #7e57c2, #ab47bc);
-    display:flex;
-    justify-content:space-around;
-    padding:10px 0;
-    backdrop-filter: blur(5px);
-    border-top-left-radius:20px;
-    border-top-right-radius:20px;
+    margin-bottom:15px;
 }
 
 /* MAIN SCREENS */
 .mainScreen{
-    margin-bottom:100px;
+    margin-bottom:80px;
 }
 
 #homeFeed .post, #videoFeed .videoPost, #marketFeed .marketItem, #profilePosts div{
@@ -90,18 +69,51 @@ button:hover{
     100%{background-position:-200% 0;}
 }
 
+#profileAvatar{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    cursor:pointer;
+    display:block;
+    margin: 0 auto;
+}
+
+.profileContainer{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
+
+#profilePosts{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:10px;
+    width:100%;
+}
+
 #homeFeed .post img, #videoFeed .videoPost video, #profilePosts div img, #marketFeed .marketItem img{
     width:100%;
     border-radius:15px;
 }
 
-#profileAvatar{
-    width:100px;
-    height:100px;
-    border-radius:50%;
-    cursor:pointer;
+/* NAVBAR */
+#navbar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background: rgba(255,255,255,0.1);
+    display:flex;
+    justify-content:space-around;
+    padding:10px 0;
+    backdrop-filter: blur(5px);
+    border-top-left-radius:20px;
+    border-top-right-radius:20px;
 }
 
+/* MESSAGES */
 .messageBubble{
     margin:5px;
     padding:10px;
@@ -123,9 +135,4 @@ button:hover{
     overflow-y:auto;
     display:flex;
     flex-direction:column;
-}
-
-@keyframes fadeIn{
-    from{opacity:0;}
-    to{opacity:1;}
 }
