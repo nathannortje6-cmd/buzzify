@@ -28,38 +28,29 @@
 
     <!-- MAIN APP -->
     <div id="appPage" class="screen hidden">
-        <!-- TOP GRADIENT BAR -->
-        <div id="topBar">
-            <h2>Buzzify</h2>
-        </div>
-
-        <!-- NAVBAR -->
-        <div id="navbar">
-            <button onclick="showScreen('homeScreen')">🏠</button>
-            <button onclick="showScreen('videosScreen')">🎥</button>
-            <button onclick="showScreen('uploadScreen')">⬆️</button>
-            <button onclick="showScreen('marketScreen')">🛒</button>
-            <button onclick="showScreen('profileScreen')">👤</button>
-        </div>
 
         <!-- HOME SCREEN -->
         <div id="homeScreen" class="mainScreen">
+            <h2 class="screenTitle">Home</h2>
             <div id="homeFeed"></div>
         </div>
 
         <!-- VIDEO SCREEN -->
         <div id="videosScreen" class="mainScreen hidden">
+            <h2 class="screenTitle">Videos</h2>
             <div id="videoFeed"></div>
         </div>
 
         <!-- UPLOAD SCREEN -->
         <div id="uploadScreen" class="mainScreen hidden">
+            <h2 class="screenTitle">Upload</h2>
             <input type="file" id="uploadFile">
             <button onclick="uploadPost()">Upload Post</button>
         </div>
 
         <!-- MARKETPLACE SCREEN -->
         <div id="marketScreen" class="mainScreen hidden">
+            <h2 class="screenTitle">Marketplace</h2>
             <input type="file" id="itemPhoto">
             <input type="text" id="itemName" placeholder="Item Name">
             <input type="number" id="itemPrice" placeholder="Price">
@@ -69,14 +60,17 @@
 
         <!-- PROFILE SCREEN -->
         <div id="profileScreen" class="mainScreen hidden">
-            <img id="profileAvatar" onclick="updateProfilePic()">
-            <h3 id="profileUsername"></h3>
-            <p id="profileBioText" onclick="editBio()"></p>
-            <div id="profilePosts"></div>
+            <div class="profileContainer">
+                <img id="profileAvatar" onclick="updateProfilePic()">
+                <h3 id="profileUsername"></h3>
+                <p id="profileBioText" onclick="editBio()"></p>
+                <div id="profilePosts"></div>
+            </div>
         </div>
 
         <!-- MESSAGES SCREEN -->
         <div id="messagesScreen" class="mainScreen hidden">
+            <h2 class="screenTitle">Messages</h2>
             <div id="userList"></div>
             <div id="chatScreen" class="hidden">
                 <h3 id="chatUser"></h3>
@@ -85,6 +79,15 @@
                 <button onclick="sendChatMessage()">Send</button>
                 <button onclick="closeChat()">Back</button>
             </div>
+        </div>
+
+        <!-- NAVBAR -->
+        <div id="navbar">
+            <button onclick="showScreen('homeScreen')">🏠</button>
+            <button onclick="showScreen('videosScreen')">🎥</button>
+            <button onclick="showScreen('uploadScreen')">⬆️</button>
+            <button onclick="showScreen('marketScreen')">🛒</button>
+            <button onclick="showScreen('profileScreen')">👤</button>
         </div>
     </div>
 
