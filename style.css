@@ -123,7 +123,7 @@ button:hover {
     align-self: flex-start;
 }
 
-/* BOTTOM NAVIGATION */
+/* BOTTOM NAVIGATION WITH OUTLINE ICONS */
 #bottomNav {
     position: fixed;
     bottom: 0;
@@ -136,5 +136,14 @@ button:hover {
     border-top-right-radius: 20px;
 }
 #bottomNav button {
-    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+#bottomNav svg {
+    width: 28px;
+    height: 28px;
+}
+#bottomNav button:hover svg {
+    stroke: #fff;
 }
