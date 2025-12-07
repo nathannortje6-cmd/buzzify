@@ -69,11 +69,14 @@ function loadApp() {
     document.getElementById('signupPage').classList.add('hidden');
     document.getElementById('appPage').classList.remove('hidden');
 
+    // Update profile info
     document.getElementById('profileUsername').innerText = currentUser.username;
     document.getElementById('profileBioText').innerText = currentUser.bio || '';
-    if(currentUser.avatar) document.getElementById('profileAvatar').src = currentUser.avatar;
+    document.getElementById('profileAvatar').src = currentUser.avatar || 'https://i.ibb.co/6NX5vTq/default-avatar.png';
 
+    // Show only home screen initially
     showScreen('homeScreen');
+
     renderHome();
     renderVideos();
     renderMarket();
@@ -82,47 +85,51 @@ function loadApp() {
 
 // ===== Render Functions =====
 function renderHome() { renderFeed('homeFeed', getPosts()); }
-function renderVideos() { renderFeed('videoFeed', getPosts().filter(p=>p.type==='video')); }
-function renderProfilePosts() { renderFeed('profilePosts', getPosts().filter(p=>p.user===currentUser.username)); }
+function renderVideos() { renderFeed('videoFeed', getPosts().filter(p => p.type === 'video')); }
+function renderProfilePosts() { renderFeed('profilePosts', getPosts().filter(p => p.user === currentUser.username)); }
 function renderMarket() { renderFeed('marketFeed', getMarketItems(), true); }
 
 // ===== Generic Feed Renderer =====
-function renderFeed(containerId, items, isMarket=false){
-    const container=document.getElementById(containerId);
-    container.innerHTML='';
-    if(items.length===0){
-        for(let i=0;i<6;i++){
-            const box=document.createElement('div');
-            box.className='loadingBox';
+function renderFeed(containerId, items, isMarket = false) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+
+    if (items.length === 0) {
+        // Show 6 shimmer boxes
+        for (let i = 0; i < 6; i++) {
+            const box = document.createElement('div');
+            box.className = 'loadingBox';
             container.appendChild(box);
         }
     } else {
-        items.forEach(item=>{
-            const box=document.createElement('div');
-            box.className='loadingBox';
-            if(isMarket){
-                const img=document.createElement('img');
-                img.src=item.photo;
-                img.style.width='100%';
-                img.style.borderRadius='12px';
-                box.innerHTML='';
+        items.forEach(item => {
+            const box = document.createElement('div');
+            box.className = 'loadingBox';
+
+            if (isMarket) {
+                const img = document.createElement('img');
+                img.src = item.photo;
+                img.style.width = '100%';
+                img.style.borderRadius = '12px';
+                box.innerHTML = '';
                 box.appendChild(img);
-            } else if(item.type==='image'){
-                const img=document.createElement('img');
-                img.src=item.data;
-                img.style.width='100%';
-                img.style.borderRadius='12px';
-                box.innerHTML='';
+            } else if (item.type === 'image') {
+                const img = document.createElement('img');
+                img.src = item.data;
+                img.style.width = '100%';
+                img.style.borderRadius = '12px';
+                box.innerHTML = '';
                 box.appendChild(img);
-            } else if(item.type==='video'){
-                const vid=document.createElement('video');
-                vid.src=item.data;
-                vid.controls=true;
-                vid.style.width='100%';
-                vid.style.borderRadius='12px';
-                box.innerHTML='';
+            } else if (item.type === 'video') {
+                const vid = document.createElement('video');
+                vid.src = item.data;
+                vid.controls = true;
+                vid.style.width = '100%';
+                vid.style.borderRadius = '12px';
+                box.innerHTML = '';
                 box.appendChild(vid);
             }
+
             container.appendChild(box);
         });
     }
@@ -130,14 +137,14 @@ function renderFeed(containerId, items, isMarket=false){
 
 // ===== Upload Posts =====
 function uploadPost() {
-    const file=document.getElementById('uploadFile').files[0];
-    if(!file) return;
+    const file = document.getElementById('uploadFile').files[0];
+    if (!file) return;
 
-    const reader=new FileReader();
-    reader.onload=function(e){
-        const posts=getPosts();
-        const type=file.type.startsWith('video') ? 'video' : 'image';
-        posts.unshift({user:currentUser.username, data:e.target.result, type});
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const posts = getPosts();
+        const type = file.type.startsWith('video') ? 'video' : 'image';
+        posts.unshift({ user: currentUser.username, data: e.target.result, type });
         savePosts(posts);
         renderHome();
         renderVideos();
@@ -148,52 +155,56 @@ function uploadPost() {
 
 // ===== Marketplace Upload =====
 function addItem() {
-    const photo=document.getElementById('itemPhoto').files[0];
-    const name=document.getElementById('itemName').value.trim();
-    const price=document.getElementById('itemPrice').value.trim();
-    if(!photo || !name || !price){ alert('Complete all fields!'); return; }
+    const photo = document.getElementById('itemPhoto').files[0];
+    const name = document.getElementById('itemName').value.trim();
+    const price = document.getElementById('itemPrice').value.trim();
 
-    const reader=new FileReader();
-    reader.onload=function(e){
-        const items=getMarketItems();
-        items.unshift({user:currentUser.username, name, price, photo:e.target.result});
+    if (!photo || !name || !price) { alert('Complete all fields!'); return; }
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const items = getMarketItems();
+        items.unshift({ user: currentUser.username, name, price, photo: e.target.result });
         saveMarketItems(items);
         renderMarket();
     }
     reader.readAsDataURL(photo);
 }
 
-// ===== Messages (Simple) =====
+// ===== Messages =====
 function sendChatMessage() {
-    const input=document.getElementById('chatInput');
-    if(input.value.trim()==='') return;
-    const msg=document.createElement('div');
-    msg.innerText=input.value.trim();
-    msg.style.background='#dcd6f7';
-    msg.style.margin='5px';
-    msg.style.padding='5px';
-    msg.style.borderRadius='10px';
+    const input = document.getElementById('chatInput');
+    if (input.value.trim() === '') return;
+
+    const msg = document.createElement('div');
+    msg.innerText = input.value.trim();
+    msg.style.background = '#dcd6f7';
+    msg.style.margin = '5px';
+    msg.style.padding = '5px';
+    msg.style.borderRadius = '10px';
+
     document.getElementById('chatMessages').appendChild(msg);
-    input.value='';
+    input.value = '';
 }
 
-function closeChat(){
+function closeChat() {
     document.getElementById('chatScreen').classList.add('hidden');
     document.getElementById('userList').classList.remove('hidden');
 }
 
 // ===== Profile =====
-function updateProfilePic(){
-    const file=document.createElement('input');
-    file.type='file';
-    file.accept='image/*';
-    file.onchange=function(){
-        const reader=new FileReader();
-        reader.onload=function(e){
-            currentUser.avatar=e.target.result;
-            document.getElementById('profileAvatar').src=currentUser.avatar;
-            const users=getUsers();
-            users[users.findIndex(u=>u.username===currentUser.username)]=currentUser;
+function updateProfilePic() {
+    const file = document.createElement('input');
+    file.type = 'file';
+    file.accept = 'image/*';
+    file.onchange = function () {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            currentUser.avatar = e.target.result;
+            document.getElementById('profileAvatar').src = currentUser.avatar;
+
+            const users = getUsers();
+            users[users.findIndex(u => u.username === currentUser.username)] = currentUser;
             saveUsers(users);
         }
         reader.readAsDataURL(file.files[0]);
@@ -201,13 +212,14 @@ function updateProfilePic(){
     file.click();
 }
 
-function editBio(){
-    const newBio=prompt('Enter new bio:', currentUser.bio || '');
-    if(newBio!==null){
-        currentUser.bio=newBio;
-        document.getElementById('profileBioText').innerText=currentUser.bio;
-        const users=getUsers();
-        users[users.findIndex(u=>u.username===currentUser.username)]=currentUser;
+function editBio() {
+    const newBio = prompt('Enter new bio:', currentUser.bio || '');
+    if (newBio !== null) {
+        currentUser.bio = newBio;
+        document.getElementById('profileBioText').innerText = currentUser.bio;
+
+        const users = getUsers();
+        users[users.findIndex(u => u.username === currentUser.username)] = currentUser;
         saveUsers(users);
     }
 }
