@@ -16,9 +16,7 @@ body {
     padding: 15px;
     transition: all 0.3s ease-in-out;
 }
-.hidden {
-    display: none;
-}
+.hidden { display: none; }
 
 /* INPUTS & BUTTONS */
 input, textarea {
@@ -43,15 +41,8 @@ button {
     font-size: 16px;
     transition: 0.3s;
 }
-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-}
-.linkBtn {
-    background: transparent;
-    color: #ffb3ff;
-    font-size: 14px;
-}
+button:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+.linkBtn { background: transparent; color: #ffb3ff; font-size: 14px; }
 
 /* MAIN SCREENS */
 .mainScreen {
@@ -62,7 +53,7 @@ button:hover {
     max-height: calc(100vh - 80px);
 }
 
-/* POSTS & PLACEHOLDERS */
+/* POSTS, VIDEOS, PLACEHOLDERS */
 .post, .videoPost, .marketItem, .placeholder {
     background: #5a00a8;
     margin: 10px;
@@ -77,71 +68,29 @@ button:hover {
     text-align: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
-.post.placeholder {content:"Post";}
 
-/* MARKETPLACE ITEMS */
-.marketItem.placeholder {content:"Item"; min-height:120px;}
+/* MARKETPLACE */
+.marketGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top:10px; }
+.marketItem { display: flex; flex-direction: column; align-items: center; min-height:150px; }
+.marketItem img { width:100%; height:100px; object-fit:cover; border-radius:10px; margin-bottom:5px; }
 
-/* PROFILE HEADER */
-#profileHeader {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-}
-.avatarLarge {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin-bottom: 10px;
-    border: 3px solid #b266ff;
-}
+/* MESSAGING */
+.userList { display: flex; flex-direction: column; width:100%; }
+.userBtn { background:#5a00a8; margin:5px 0; padding:10px; border-radius:10px; cursor:pointer; text-align:left; }
+.chatScreen { display:flex; flex-direction:column; width:100%; }
+.chatMessages { flex:1; max-height:300px; overflow-y:auto; margin-bottom:5px; }
+.messageBubble { padding:8px 12px; border-radius:15px; margin:5px; max-width:70%; }
+.messageBubble.you { background:#b266ff; align-self:flex-end; }
+.messageBubble.other { background:#7a00cc55; align-self:flex-start; }
 
-/* PROFILE POSTS GALLERY */
-.postsGallery {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 5px;
-    width: 100%;
-    margin-top: 10px;
-    max-height: 300px;
-    overflow-y: auto;
-}
-.postsGallery img, .postsGallery video, .postsGallery .placeholder {
-    width: 100%;
-    aspect-ratio: 1/1;
-    object-fit: cover;
-    border-radius: 10px;
-    border: 2px solid #d1b3ff;
-    background-color: #7a00cc55;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:12px;
-    color:#d1b3ff;
-}
+/* PROFILE */
+#profileHeader { display:flex; flex-direction:column; align-items:center; margin-bottom:20px; }
+.avatarLarge { width:100px; height:100px; border-radius:50%; margin-bottom:10px; border:3px solid #b266ff; }
+.postsGallery { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; width:100%; margin-top:10px; max-height:300px; overflow-y:auto; }
+.postsGallery img, .postsGallery video, .postsGallery .placeholder { width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:10px; border:2px solid #d1b3ff; background-color:#7a00cc55; display:flex; justify-content:center; align-items:center; font-size:12px; color:#d1b3ff; }
 
 /* BOTTOM NAVIGATION */
-#bottomNav {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    background: #4b0082;
-    padding: 10px 0;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-}
-#bottomNav button {
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-#bottomNav svg {
-    width: 28px;
-    height: 28px;
-}
-#bottomNav button:hover svg {
-    stroke: #fff;
-}
+#bottomNav { position:fixed; bottom:0; width:100%; display:flex; justify-content:space-around; background:#4b0082; padding:10px 0; border-top-left-radius:20px; border-top-right-radius:20px; }
+#bottomNav button { background:none; border:none; cursor:pointer; }
+#bottomNav svg { width:28px; height:28px; }
+#bottomNav button:hover svg { stroke:#fff; }
