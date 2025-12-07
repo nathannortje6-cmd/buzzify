@@ -1,26 +1,39 @@
+/* GENERAL BODY & GRADIENT THEME */
 body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
+    min-height: 100vh;
     background: linear-gradient(160deg, #2b003a, #7a00cc, #d18fff);
     color: white;
-    min-height: 100vh;
 }
 
-.screen { 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    justify-content: flex-start;
-    padding: 10px; 
+/* SCREENS */
+.screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    transition: all 0.3s ease-in-out;
+}
+.hidden {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+}
+.screen:not(.hidden) {
+    opacity: 1;
+    position: relative;
 }
 
-.hidden { display: none; }
-
+/* INPUTS & BUTTONS */
 input, textarea {
     width: 90%;
     margin: 5px 0;
-    padding: 10px;
+    padding: 12px;
     border-radius: 15px;
     border: none;
     outline: none;
@@ -28,7 +41,7 @@ input, textarea {
 }
 
 button {
-    padding: 10px;
+    padding: 12px;
     margin: 5px 0;
     border-radius: 15px;
     border: none;
@@ -37,14 +50,80 @@ button {
     background: linear-gradient(160deg, #5a00a8, #b266ff);
     color: white;
     font-size: 16px;
+    transition: 0.3s;
 }
-
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
 .linkBtn {
     background: transparent;
     color: #ffb3ff;
     font-size: 14px;
 }
 
+/* MAIN SCREENS */
+.mainScreen {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 60px;
+    overflow-y: auto;
+    max-height: calc(100vh - 80px);
+}
+
+/* POSTS & MARKET ITEMS & MESSAGES */
+.post, .marketItem, .messageItem {
+    background: #5a00a8;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: 0.3s;
+}
+.post:hover, .marketItem:hover, .messageItem:hover {
+    transform: scale(1.02);
+}
+
+/* POST HEADER & AVATAR */
+.postHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.postContent {
+    width: 100%;
+    border-radius: 15px;
+    margin-bottom: 5px;
+}
+.postActions button {
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+/* MESSAGE BUBBLES */
+#messageFeed {
+    display: flex;
+    flex-direction: column;
+}
+.messageItem.you {
+    background: #a64dff;
+    align-self: flex-end;
+}
+.messageItem.other {
+    background: #5a00a8;
+    align-self: flex-start;
+}
+
+/* BOTTOM NAVIGATION */
 #bottomNav {
     position: fixed;
     bottom: 0;
@@ -53,19 +132,9 @@ button {
     justify-content: space-around;
     background: #4b0082;
     padding: 10px 0;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
 }
-
-.mainScreen {
-    width: 100%;
-    max-width: 600px;
-    margin-bottom: 60px; /* space for bottom nav */
-    overflow-y: auto;
-    max-height: calc(100vh - 80px);
-}
-
-.post, .marketItem, .messageItem {
-    background: #5a00a8;
-    margin: 10px;
-    padding: 10px;
-    border-radius: 20px;
+#bottomNav button {
+    font-size: 24px;
 }
