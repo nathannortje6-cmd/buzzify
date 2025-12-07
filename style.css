@@ -1,7 +1,7 @@
 body{
     margin:0;
     font-family: Arial, sans-serif;
-    background: linear-gradient(to bottom, #2c003e, #7e57c2);
+    background-color:#c39bd3; /* solid light purple */
     color:white;
 }
 
@@ -37,36 +37,19 @@ button:hover{
     background-color:#ab47bc;
 }
 
-.screenTitle{
-    text-align:center;
-    margin-bottom:15px;
-}
-
 /* MAIN SCREENS */
 .mainScreen{
     margin-bottom:80px;
 }
 
-#homeFeed .post, #videoFeed .videoPost, #marketFeed .marketItem, #profilePosts div{
-    margin:10px 0;
-    padding:10px;
-    background: rgba(255,255,255,0.1);
-    border-radius:15px;
-    position:relative;
-    overflow:hidden;
-}
-
-/* LOADING ANIMATION */
-.post.loading, .videoPost.loading, .marketItem.loading, #profilePosts div.loading{
-    height:150px;
-    background: linear-gradient(-90deg, #4a148c 0%, #7e57c2 50%, #4a148c 100%);
-    background-size: 400% 400%;
-    animation: shimmer 1.5s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-    0%{background-position:200% 0;}
-    100%{background-position:-200% 0;}
+/* PROFILE SCREEN CENTERED */
+.profileContainer{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    height:80vh;
 }
 
 #profileAvatar{
@@ -74,16 +57,6 @@ button:hover{
     height:120px;
     border-radius:50%;
     cursor:pointer;
-    display:block;
-    margin: 0 auto;
-}
-
-.profileContainer{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
 }
 
 #profilePosts{
@@ -91,11 +64,20 @@ button:hover{
     grid-template-columns: repeat(3, 1fr);
     gap:10px;
     width:100%;
+    margin-top:20px;
 }
 
-#homeFeed .post img, #videoFeed .videoPost video, #profilePosts div img, #marketFeed .marketItem img{
-    width:100%;
-    border-radius:15px;
+/* LOADING ANIMATION */
+.post.loading, .videoPost.loading, .marketItem.loading, #profilePosts div.loading{
+    height:150px;
+    background: linear-gradient(-90deg, #9b59b6 0%, #d2b4de 50%, #9b59b6 100%);
+    background-size: 400% 400%;
+    animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%{background-position:200% 0;}
+    100%{background-position:-200% 0;}
 }
 
 /* NAVBAR */
@@ -113,26 +95,13 @@ button:hover{
     border-top-right-radius:20px;
 }
 
-/* MESSAGES */
-.messageBubble{
-    margin:5px;
-    padding:10px;
-    border-radius:10px;
+#navbar .icon{
+    font-size:1.5em;
+    color:#dcd6f7; /* light outline style */
 }
 
-.messageBubble.you{
-    background-color: #7e57c2;
-    align-self:flex-end;
-}
-
-.messageBubble.other{
-    background-color: #ab47bc;
-    align-self:flex-start;
-}
-
-#chatMessages{
-    max-height:300px;
-    overflow-y:auto;
-    display:flex;
-    flex-direction:column;
+/* CONTENT IMAGES */
+#homeFeed .post img, #videoFeed .videoPost video, #profilePosts div img, #marketFeed .marketItem img{
+    width:100%;
+    border-radius:15px;
 }
