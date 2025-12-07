@@ -1,92 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buzzify</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💜 Buzzify</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- LOGIN SCREEN -->
-    <div id="loginPage" class="screen">
-        <h1>Buzzify</h1>
-        <input id="loginUser" placeholder="Username">
-        <input id="loginPass" type="password" placeholder="Password">
-        <button onclick="login()">Login</button>
-        <p>Don't have an account? <button onclick="showSignup()">Sign Up</button></p>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="screen">
+    <h1>💜 Buzzify</h1>
+    <h2>Login</h2>
+    <input id="loginUser" type="text" placeholder="Username">
+    <input id="loginPass" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <button class="linkBtn" onclick="showSignup()">Create Account</button>
+</div>
+
+<!-- SIGNUP PAGE -->
+<div id="signupPage" class="screen hidden">
+    <h1>💜 Buzzify</h1>
+    <h2>Create Account</h2>
+    <input id="newUser" type="text" placeholder="Username">
+    <input id="newPass" type="password" placeholder="Password">
+    <input id="newBio" type="text" placeholder="Short Bio">
+    <button onclick="signup()">Sign Up</button>
+    <button class="linkBtn" onclick="showLogin()">Back to Login</button>
+</div>
+
+<!-- MAIN APP -->
+<div id="appPage" class="screen hidden">
+
+    <!-- HOME SCREEN -->
+    <div id="homeScreen" class="mainScreen">
+        <h2>Home Feed</h2>
+        <div id="homeFeed">
+            <!-- posts rendered dynamically -->
+        </div>
     </div>
 
-    <!-- SIGNUP SCREEN -->
-    <div id="signupPage" class="screen hidden">
-        <h1>Create Account</h1>
-        <input id="newUser" placeholder="Username">
-        <input id="newPass" type="password" placeholder="Password">
-        <textarea id="newBio" placeholder="Bio"></textarea>
-        <button onclick="signup()">Sign Up</button>
-        <p>Already have an account? <button onclick="showLogin()">Login</button></p>
+    <!-- VIDEOS SCREEN -->
+    <div id="videosScreen" class="mainScreen hidden">
+        <h2>Videos</h2>
+        <div id="videoFeed">
+            <!-- video posts dynamically -->
+        </div>
     </div>
 
-    <!-- MAIN APP -->
-    <div id="appPage" class="screen hidden">
-        <div id="navbar">
-            <button onclick="showScreen('homeScreen')">🏠</button>
-            <button onclick="showScreen('videosScreen')">🎥</button>
-            <button onclick="showScreen('uploadScreen')">⬆️</button>
-            <button onclick="showScreen('marketScreen')">🛒</button>
-            <button onclick="showScreen('profileScreen')">👤</button>
+    <!-- UPLOAD SCREEN -->
+    <div id="uploadScreen" class="mainScreen hidden">
+        <h2>Upload</h2>
+        <div id="uploadArea" class="uploadArea">
+            <p>Click or drag & drop to upload</p>
+            <input type="file" id="uploadFile" accept="image/*,video/*" hidden onchange="uploadPost()">
         </div>
+        <div id="uploadPreview"></div>
+    </div>
 
-        <!-- HOME SCREEN -->
-        <div id="homeScreen" class="mainScreen">
-            <h2>Home</h2>
-            <div id="homeFeed"></div>
+    <!-- MARKETPLACE SCREEN -->
+    <div id="marketScreen" class="mainScreen hidden">
+        <h2>Marketplace</h2>
+        <div id="marketUploadArea" class="uploadArea">
+            <p>Click to add item photo</p>
+            <input type="file" id="itemPhoto" accept="image/*" hidden>
         </div>
-
-        <!-- VIDEO SCREEN -->
-        <div id="videosScreen" class="mainScreen hidden">
-            <h2>Videos</h2>
-            <div id="videoFeed"></div>
+        <input type="text" id="itemName" placeholder="Item Name">
+        <input type="number" id="itemPrice" placeholder="Price">
+        <button onclick="addItem()">List Item</button>
+        <div id="marketFeed" class="marketGrid">
+            <!-- items dynamically -->
         </div>
+    </div>
 
-        <!-- UPLOAD SCREEN -->
-        <div id="uploadScreen" class="mainScreen hidden">
-            <h2>Upload</h2>
-            <input type="file" id="uploadFile">
-            <button onclick="uploadPost()">Upload Post</button>
+    <!-- MESSAGES SCREEN -->
+    <div id="messagesScreen" class="mainScreen hidden">
+        <h2>Messages</h2>
+        <div id="userList" class="userList"></div>
+        <div id="chatScreen" class="chatScreen hidden">
+            <button onclick="closeChat()">← Back</button>
+            <h3 id="chatUser"></h3>
+            <div id="chatMessages" class="chatMessages"></div>
+            <input id="chatInput" type="text" placeholder="Type a message">
+            <button onclick="sendChatMessage()">Send</button>
         </div>
+    </div>
 
-        <!-- MARKETPLACE SCREEN -->
-        <div id="marketScreen" class="mainScreen hidden">
-            <h2>Marketplace</h2>
-            <input type="file" id="itemPhoto">
-            <input type="text" id="itemName" placeholder="Item Name">
-            <input type="number" id="itemPrice" placeholder="Price">
-            <button onclick="addItem()">Add Item</button>
-            <div id="marketFeed"></div>
-        </div>
-
-        <!-- PROFILE SCREEN -->
-        <div id="profileScreen" class="mainScreen hidden">
-            <h2>Profile</h2>
-            <img id="profileAvatar" onclick="updateProfilePic()" style="width:100px;height:100px;border-radius:50%;">
+    <!-- PROFILE SCREEN -->
+    <div id="profileScreen" class="mainScreen hidden">
+        <h2>Profile</h2>
+        <div id="profileHeader">
+            <img id="profileAvatar" src="https://i.ibb.co/6NX5vTq/default-avatar.png" class="avatarLarge">
+            <button class="editBtn" onclick="updateProfilePic()">Change Profile Picture</button>
             <h3 id="profileUsername"></h3>
-            <p id="profileBioText" onclick="editBio()"></p>
-            <div id="profilePosts"></div>
+            <p id="profileBioText"></p>
+            <button class="editBtn" onclick="editBio()">Edit Bio</button>
         </div>
-
-        <!-- MESSAGES -->
-        <div id="messagesScreen" class="mainScreen hidden">
-            <div id="userList"></div>
-            <div id="chatScreen" class="hidden">
-                <h3 id="chatUser"></h3>
-                <div id="chatMessages"></div>
-                <input id="chatInput" placeholder="Type a message">
-                <button onclick="sendChatMessage()">Send</button>
-                <button onclick="closeChat()">Back</button>
-            </div>
+        <h3>Your Posts</h3>
+        <div id="profilePosts" class="postsGallery">
+            <!-- posts dynamically -->
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- BOTTOM NAVIGATION -->
+    <div id="bottomNav">
+        <button onclick="showScreen('homeScreen')" class="navBtn" title="Home">🏠</button>
+        <button onclick="showScreen('videosScreen')" class="navBtn" title="Videos">🎥</button>
+        <button onclick="showScreen('uploadScreen')" class="navBtn" title="Upload">⬆️</button>
+        <button onclick="showScreen('marketScreen')" class="navBtn" title="Marketplace">🛒</button>
+        <button onclick="showScreen('messagesScreen')" class="navBtn" title="Messages">💬</button>
+        <button onclick="showScreen('profileScreen')" class="navBtn" title="Profile">👤</button>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
