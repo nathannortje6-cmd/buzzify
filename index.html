@@ -3,14 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Buzzify</title>
+<title>💜 Buzzify</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <!-- LOGIN PAGE -->
 <div id="loginPage" class="screen">
-    <h2>💜 Buzzify Login</h2>
+    <h1>💜 Buzzify</h1>
+    <h2>Login</h2>
     <input id="loginUser" type="text" placeholder="Username">
     <input id="loginPass" type="password" placeholder="Password">
     <button onclick="login()">Login</button>
@@ -19,7 +20,8 @@
 
 <!-- SIGNUP PAGE -->
 <div id="signupPage" class="screen hidden">
-    <h2>💜 Create Account</h2>
+    <h1>💜 Buzzify</h1>
+    <h2>Create Account</h2>
     <input id="newUser" type="text" placeholder="Username">
     <input id="newPass" type="password" placeholder="Password">
     <input id="newBio" type="text" placeholder="Short Bio">
@@ -30,7 +32,7 @@
 <!-- MAIN APP -->
 <div id="appPage" class="screen hidden">
 
-    <!-- Screens -->
+    <!-- SCREENS -->
     <div id="homeScreen" class="mainScreen">
         <h2>Home Feed</h2>
         <div id="homeFeed"></div>
@@ -45,6 +47,7 @@
         <h2>Upload</h2>
         <input type="file" id="uploadFile" accept="image/*,video/*">
         <button onclick="uploadPost()">Upload</button>
+        <div id="uploadPreview"></div>
     </div>
 
     <div id="marketScreen" class="mainScreen hidden">
@@ -71,7 +74,7 @@
         <div id="profileInfo"></div>
     </div>
 
-    <!-- Bottom Toolbar -->
+    <!-- BOTTOM TOOLBAR -->
     <div id="bottomNav">
         <button onclick="showScreen('homeScreen')">🏠</button>
         <button onclick="showScreen('videosScreen')">🎥</button>
