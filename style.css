@@ -2,7 +2,7 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #c39bd3; /* solid light purple */
+    background-color: #c39bd3; /* solid pink/purple */
     color: #fff;
 }
 
@@ -21,7 +21,7 @@ input, textarea {
     border-radius: 12px;
     border: none;
     width: 90%;
-    background-color: #d7bde2;
+    background-color: #d7b4e3;
     color: #000;
 }
 
@@ -48,12 +48,7 @@ button:hover {
     cursor: pointer;
 }
 
-/* Main App Screens */
-.mainScreen {
-    margin-bottom: 80px;
-}
-
-/* Upload Areas */
+/* Upload Area */
 .uploadArea {
     display: flex;
     align-items: center;
@@ -63,7 +58,6 @@ button:hover {
     height: 150px;
     cursor: pointer;
     margin: 10px 0;
-    text-align: center;
 }
 
 /* Profile */
@@ -88,14 +82,17 @@ button:hover {
     margin-top: 10px;
 }
 
-/* Loading shimmer animation */
-.loading {
-    height: 150px;
+/* Shimmer box animation */
+.loadingBox {
+    width: 100%;
+    padding-bottom: 100%; /* square box */
+    border-radius: 12px;
     background: linear-gradient(-90deg, #9b59b6 0%, #d2b4de 50%, #9b59b6 100%);
     background-size: 400% 400%;
     animation: shimmer 1.5s ease-in-out infinite;
 }
 
+/* Shimmer animation keyframes */
 @keyframes shimmer {
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
