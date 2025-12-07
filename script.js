@@ -1,286 +1,196 @@
-// ---------------- LOGIN / SIGNUP ----------------
+// ===== Screen Navigation =====
+function showScreen(screen) {
+    document.querySelectorAll('.mainScreen').forEach(s => s.classList.add('hidden'));
+    document.getElementById(screen).classList.remove('hidden');
+}
+
+// ===== Login / Signup =====
 function showLogin() {
-    document.getElementById('loginPage').classList.remove('hidden');
     document.getElementById('signupPage').classList.add('hidden');
-    document.getElementById('appPage').classList.add('hidden');
+    document.getElementById('loginPage').classList.remove('hidden');
 }
 
 function showSignup() {
-    document.getElementById('signupPage').classList.remove('hidden');
     document.getElementById('loginPage').classList.add('hidden');
+    document.getElementById('signupPage').classList.remove('hidden');
 }
 
 function login() {
-    const user = document.getElementById('loginUser').value.trim();
-    const pass = document.getElementById('loginPass').value.trim();
-    const users = JSON.parse(localStorage.getItem("buzzify_users")||"[]");
+    const username = document.getElementById('loginUser').value;
+    const password = document.getElementById('loginPass').value;
+    if (!username || !password) return alert("Enter username and password");
 
-    const found = users.find(u => u.username === user && u.password === pass);
-    if(found){
-        localStorage.setItem("buzzify_user", user);
-        localStorage.setItem("buzzify_bio", found.bio||"");
-        localStorage.setItem("buzzify_avatar", found.avatar||"https://i.ibb.co/6NX5vTq/default-avatar.png");
-        showApp();
+    const storedPass = localStorage.getItem(username);
+    if (storedPass && storedPass === password) {
+        localStorage.setItem('currentUser', username);
+        document.getElementById('loginPage').classList.add('hidden');
+        document.getElementById('appPage').classList.remove('hidden');
+        loadFeeds();
+        loadProfile();
     } else {
-        alert("Incorrect username or password!");
+        alert("Invalid credentials");
     }
 }
 
 function signup() {
-    const user = document.getElementById('newUser').value.trim();
-    const pass = document.getElementById('newPass').value.trim();
-    const bio = document.getElementById('newBio').value.trim();
+    const username = document.getElementById('newUser').value;
+    const password = document.getElementById('newPass').value;
+    const bio = document.getElementById('newBio').value;
 
-    if(!user || !pass){ alert("Fill in all fields!"); return; }
+    if (!username || !password) return alert("Enter username and password");
 
-    const users = JSON.parse(localStorage.getItem("buzzify_users")||"[]");
-    if(users.find(u=>u.username===user)){ alert("Username taken!"); return; }
+    if (localStorage.getItem(username)) {
+        alert("Username already exists");
+        return;
+    }
 
-    users.push({username:user,password:pass,bio,avatar:"https://i.ibb.co/6NX5vTq/default-avatar.png"});
-    localStorage.setItem("buzzify_users", JSON.stringify(users));
-    alert("Account created!");
+    localStorage.setItem(username, password);
+    localStorage.setItem(username + "_bio", bio);
     showLogin();
+    alert("Account created, please login");
 }
 
-// ---------------- SHOW APP ----------------
-function showApp() {
-    document.getElementById('loginPage').classList.add('hidden');
-    document.getElementById('signupPage').classList.add('hidden');
-    document.getElementById('appPage').classList.remove('hidden');
-    showScreen('homeScreen');
+// ===== Load Feeds (shimmer boxes) =====
+function loadFeeds() {
+    const homeFeed = document.getElementById('homeFeed');
+    const videoFeed = document.getElementById('videoFeed');
+    const marketFeed = document.getElementById('marketFeed');
+    const profilePosts = document.getElementById('profilePosts');
+
+    [homeFeed, videoFeed, marketFeed, profilePosts].forEach(feed => feed.innerHTML = "");
+
+    for (let i = 0; i < 6; i++) {
+        const box1 = document.createElement('div'); box1.className = "loadingBox";
+        const box2 = document.createElement('div'); box2.className = "loadingBox";
+        const box3 = document.createElement('div'); box3.className = "loadingBox";
+        const box4 = document.createElement('div'); box4.className = "loadingBox";
+
+        homeFeed.appendChild(box1.cloneNode());
+        videoFeed.appendChild(box2.cloneNode());
+        marketFeed.appendChild(box3.cloneNode());
+        profilePosts.appendChild(box4.cloneNode());
+    }
+}
+
+// ===== Profile =====
+function loadProfile() {
+    const username = localStorage.getItem('currentUser');
+    if (!username) return;
+    document.getElementById('profileUsername').innerText = username;
+    document.getElementById('profileBioText').innerText = localStorage.getItem(username + "_bio") || "";
+}
+
+function editBio() {
+    const newBio = prompt("Edit your bio:", document.getElementById('profileBioText').innerText);
+    if (!newBio) return;
+    const username = localStorage.getItem('currentUser');
+    localStorage.setItem(username + "_bio", newBio);
     loadProfile();
-    renderHomeFeed();
-    renderVideoFeed();
-    renderProfilePosts();
-    loadMarket();
-    loadUsers();
 }
 
-// ---------------- SCREEN NAVIGATION ----------------
-function showScreen(screenId){
-    const screens = document.querySelectorAll('.mainScreen');
-    screens.forEach(s=>s.classList.add('hidden'));
-    document.getElementById(screenId).classList.remove('hidden');
-}
-
-// ---------------- PROFILE ----------------
-function loadProfile(){
-    document.getElementById('profileUsername').innerText = localStorage.getItem("buzzify_user");
-    document.getElementById('profileBioText').innerText = localStorage.getItem("buzzify_bio");
-    document.getElementById('profileAvatar').src = localStorage.getItem("buzzify_avatar");
-}
-
-function updateProfilePic(){
+function updateProfilePic() {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
-    fileInput.onchange = function(){
+    fileInput.onchange = () => {
         const file = fileInput.files[0];
+        if (!file) return;
         const reader = new FileReader();
-        reader.onload = function(e){
-            localStorage.setItem("buzzify_avatar", e.target.result);
-            loadProfile();
+        reader.onload = () => {
+            document.getElementById('profileAvatar').src = reader.result;
         };
         reader.readAsDataURL(file);
     };
     fileInput.click();
 }
 
-function editBio(){
-    const newBio = prompt("Enter new bio:", localStorage.getItem("buzzify_bio")||"");
-    if(newBio!==null){
-        localStorage.setItem("buzzify_bio", newBio);
-        loadProfile();
-    }
-}
-
-// ---------------- UPLOAD POSTS ----------------
-function uploadPost(){
+// ===== Upload Posts =====
+function uploadPost() {
     const fileInput = document.getElementById('uploadFile');
+    const preview = document.getElementById('uploadPreview');
     const file = fileInput.files[0];
-    if(!file) return;
-
+    if (!file) return alert("No file selected");
     const reader = new FileReader();
-    reader.onload = function(e){
-        let posts = JSON.parse(localStorage.getItem("buzzify_posts")||"[]");
-        posts.unshift({user:localStorage.getItem("buzzify_user"), src:e.target.result});
-        localStorage.setItem("buzzify_posts", JSON.stringify(posts));
-        renderHomeFeed();
-        renderVideoFeed();
-        renderProfilePosts();
+    reader.onload = () => {
+        const div = document.createElement('div');
+        div.className = "loadingBox";
+        div.style.backgroundImage = `url(${reader.result})`;
+        div.style.backgroundSize = 'cover';
+        div.style.backgroundPosition = 'center';
+        preview.appendChild(div);
     };
     reader.readAsDataURL(file);
-    fileInput.value = "";
 }
 
-function renderHomeFeed(){
-    const feed = document.getElementById('homeFeed');
-    const posts = JSON.parse(localStorage.getItem("buzzify_posts")||"[]");
-    feed.innerHTML = "";
-    if(posts.length===0){
-        for(let i=0;i<3;i++){
-            feed.innerHTML += '<div class="post placeholder">Photo/Video Placeholder</div>';
-        }
-    } else {
-        posts.forEach(p=>{
-            feed.innerHTML += `<div class="post">
-                <img src="${p.src}">
-                <div style="display:flex; justify-content:space-between; width:90%; margin-top:5px;">
-                    <span>❤️</span><span>💬</span>
-                </div>
-            </div>`;
-        });
-    }
-}
-
-function renderVideoFeed(){
-    const feed = document.getElementById('videoFeed');
-    const posts = JSON.parse(localStorage.getItem("buzzify_posts")||"[]");
-    feed.innerHTML = "";
-    if(posts.length===0){
-        for(let i=0;i<3;i++){
-            feed.innerHTML += '<div class="videoPost placeholder">Video Placeholder</div>';
-        }
-    } else {
-        posts.forEach(p=>{
-            feed.innerHTML += `<div class="videoPost">
-                <video src="${p.src}" controls style="width:100%; border-radius:15px;"></video>
-                <div style="display:flex; justify-content:space-between; width:90%; margin-top:5px;">
-                    <span>❤️</span><span>💬</span>
-                </div>
-            </div>`;
-        });
-    }
-}
-
-// ---------------- PROFILE POSTS ----------------
-function renderProfilePosts(){
-    const feed = document.getElementById('profilePosts');
-    const posts = JSON.parse(localStorage.getItem("buzzify_posts")||"[]").filter(p=>p.user===localStorage.getItem("buzzify_user"));
-    feed.innerHTML = "";
-    if(posts.length===0){
-        for(let i=0;i<3;i++){
-            feed.innerHTML += '<div class="placeholder"></div>';
-        }
-    } else {
-        posts.forEach(p=>{
-            feed.innerHTML += `<div><img src="${p.src}" style="width:100%; height:100%; border-radius:10px;"></div>`;
-        });
-    }
-}
-
-// ---------------- MARKETPLACE ----------------
-function loadMarket(){
-    const feed = document.getElementById('marketFeed');
-    const items = JSON.parse(localStorage.getItem("buzzify_market")||"[]");
-    feed.innerHTML = "";
-    if(items.length===0){
-        for(let i=0;i<3;i++){ feed.innerHTML += '<div class="marketItem placeholder">Item</div>'; }
-    } else {
-        items.forEach(i=>{
-            feed.innerHTML += `<div class="marketItem">
-                <img src="${i.photo}">
-                <strong>${i.name}</strong>
-                <span>$${i.price}</span>
-            </div>`;
-        });
-    }
-}
-
-function addItem(){
+// ===== Marketplace =====
+function addItem() {
     const fileInput = document.getElementById('itemPhoto');
-    const file = fileInput.files[0];
-    const name = document.getElementById('itemName').value.trim();
+    const name = document.getElementById('itemName').value;
     const price = document.getElementById('itemPrice').value;
 
-    if(!file || !name || !price){ alert("Fill all fields"); return; }
+    if (!fileInput.files[0] || !name || !price) return alert("Complete all fields");
 
     const reader = new FileReader();
-    reader.onload = function(e){
-        const items = JSON.parse(localStorage.getItem("buzzify_market")||"[]");
-        items.unshift({photo:e.target.result,name,price});
-        localStorage.setItem("buzzify_market", JSON.stringify(items));
-        loadMarket();
-        fileInput.value = "";
-        document.getElementById('itemName').value="";
-        document.getElementById('itemPrice').value="";
+    reader.onload = () => {
+        const div = document.createElement('div');
+        div.className = "loadingBox";
+        div.style.backgroundImage = `url(${reader.result})`;
+        div.style.backgroundSize = 'cover';
+        div.style.backgroundPosition = 'center';
+        marketFeed.appendChild(div);
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(fileInput.files[0]);
 }
 
-// ---------------- MESSAGES ----------------
-let currentChatUser = null;
+// ===== Messaging =====
+function sendChatMessage() {
+    const chatInput = document.getElementById('chatInput');
+    const msg = chatInput.value.trim();
+    if (!msg) return;
+    const chatMessages = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.innerText = msg;
+    div.style.backgroundColor = '#ba68c8';
+    div.style.padding = '5px 10px';
+    div.style.borderRadius = '10px';
+    div.style.margin = '5px 0';
+    chatMessages.appendChild(div);
+    chatInput.value = '';
+}
 
-function loadUsers(){
-    const messages = JSON.parse(localStorage.getItem("buzzify_messages")||"[]");
-    const users = new Set();
-    messages.forEach(m=>{
-        if(m.user!==localStorage.getItem("buzzify_user")) users.add(m.user);
-        if(m.to!==localStorage.getItem("buzzify_user")) users.add(m.to);
+function openChat(user) {
+    document.getElementById('chatUser').innerText = user;
+    document.getElementById('chatScreen').classList.remove('hidden');
+    document.getElementById('userList').classList.add('hidden');
+}
+
+function closeChat() {
+    document.getElementById('chatScreen').classList.add('hidden');
+    document.getElementById('userList').classList.remove('hidden');
+}
+
+// ===== Dummy Users for Messaging =====
+function loadUsers() {
+    const userList = document.getElementById('userList');
+    userList.innerHTML = '';
+    const current = localStorage.getItem('currentUser');
+    const users = ['Alice', 'Bob', 'Charlie', 'Dave', current]; // dummy
+    users.forEach(u => {
+        if (u === current) return;
+        const btn = document.createElement('button');
+        btn.innerText = u;
+        btn.onclick = () => openChat(u);
+        userList.appendChild(btn);
     });
-    const userList = document.getElementById("userList");
-    userList.innerHTML = "";
-    users.forEach(u=>{
-        const div = document.createElement("div");
-        div.classList.add("userBtn");
-        div.innerText = u;
-        div.onclick = ()=>openChat(u);
-        userList.appendChild(div);
-    });
 }
 
-function openChat(user){
-    currentChatUser = user;
-    document.getElementById("chatUser").innerText = user;
-    document.getElementById("chatScreen").classList.remove("hidden");
-    document.getElementById("userList").classList.add("hidden");
-    loadChatMessages();
-}
-
-function closeChat(){
-    document.getElementById("chatScreen").classList.add("hidden");
-    document.getElementById("userList").classList.remove("hidden");
-    currentChatUser = null;
-}
-
-function sendChatMessage(){
-    const text = document.getElementById("chatInput").value;
-    if(!text || !currentChatUser){ return; }
-    const messages = JSON.parse(localStorage.getItem("buzzify_messages")||"[]");
-    messages.push({user:localStorage.getItem("buzzify_user"), to:currentChatUser, text});
-    localStorage.setItem("buzzify_messages", JSON.stringify(messages));
-    document.getElementById("chatInput").value = "";
-    loadChatMessages();
-    loadUsers();
-}
-
-function loadChatMessages(){
-    const feed = document.getElementById("chatMessages");
-    const messages = JSON.parse(localStorage.getItem("buzzify_messages")||"[]");
-    feed.innerHTML = "";
-    messages.forEach(m=>{
-        if((m.user===currentChatUser && m.to===localStorage.getItem("buzzify_user")) || 
-           (m.user===localStorage.getItem("buzzify_user") && m.to===currentChatUser)){
-            const div = document.createElement("div");
-            div.classList.add("messageBubble");
-            div.classList.add(m.user===localStorage.getItem("buzzify_user")?"you":"other");
-            div.innerText = m.text;
-            feed.appendChild(div);
-        }
-    });
-    feed.scrollTop = feed.scrollHeight;
-}
-
-// ---------------- INIT ----------------
-window.onload = function(){
-    if(localStorage.getItem("buzzify_user")){
-        showApp();
-    } else {
-        showLogin();
+// ===== Initial Load =====
+document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('currentUser')) {
+        document.getElementById('loginPage').classList.add('hidden');
+        document.getElementById('appPage').classList.remove('hidden');
+        loadFeeds();
+        loadProfile();
+        loadUsers();
     }
-    renderHomeFeed();
-    renderVideoFeed();
-    renderProfilePosts();
-    loadMarket();
-    loadUsers();
-}
+});
