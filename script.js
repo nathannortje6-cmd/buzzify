@@ -1,111 +1,234 @@
-// SCREEN FUNCTIONS
-function showScreen(screenId){
-    const screens = document.querySelectorAll('.mainScreen');
-    screens.forEach(s=>s.classList.add('hidden'));
-    document.getElementById(screenId).classList.remove('hidden');
+// ---------------- LOGIN / SIGNUP ----------------
+function showLogin() {
+    document.getElementById('loginPage').classList.remove('hidden');
+    document.getElementById('signupPage').classList.add('hidden');
+    document.getElementById('appPage').classList.add('hidden');
 }
 
-function showSignup(){ document.getElementById("loginPage").classList.add("hidden"); document.getElementById("signupPage").classList.remove("hidden"); }
-function showLogin(){ document.getElementById("signupPage").classList.add("hidden"); document.getElementById("loginPage").classList.remove("hidden"); }
-
-// LOGIN/SIGNUP
-function login(){
-    const user = document.getElementById("loginUser").value;
-    const pass = document.getElementById("loginPass").value;
-    const storedUser = localStorage.getItem("buzzify_user");
-    const storedPass = localStorage.getItem("buzzify_pass");
-    if(user===storedUser && pass===storedPass){
-        alert("Login success!");
-        document.getElementById("loginPage").classList.add("hidden");
-        document.getElementById("appPage").classList.remove("hidden");
-        loadProfile();
-        loadMarket();
-        loadUsers();
-    } else { alert("Wrong credentials!"); }
+function showSignup() {
+    document.getElementById('signupPage').classList.remove('hidden');
+    document.getElementById('loginPage').classList.add('hidden');
 }
 
-function signup(){
-    const user = document.getElementById("newUser").value;
-    const pass = document.getElementById("newPass").value;
-    const bio = document.getElementById("newBio").value;
-    localStorage.setItem("buzzify_user", user);
-    localStorage.setItem("buzzify_pass", pass);
-    localStorage.setItem("buzzify_bio", bio);
+function login() {
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value.trim();
+    const users = JSON.parse(localStorage.getItem("buzzify_users")||"[]");
+
+    const found = users.find(u => u.username === user && u.password === pass);
+    if(found){
+        localStorage.setItem("buzzify_user", user);
+        localStorage.setItem("buzzify_bio", found.bio||"");
+        localStorage.setItem("buzzify_avatar", found.avatar||"https://i.ibb.co/6NX5vTq/default-avatar.png");
+        showApp();
+    } else {
+        alert("Incorrect username or password!");
+    }
+}
+
+function signup() {
+    const user = document.getElementById('newUser').value.trim();
+    const pass = document.getElementById('newPass').value.trim();
+    const bio = document.getElementById('newBio').value.trim();
+
+    if(!user || !pass){ alert("Fill in all fields!"); return; }
+
+    const users = JSON.parse(localStorage.getItem("buzzify_users")||"[]");
+    if(users.find(u=>u.username===user)){ alert("Username taken!"); return; }
+
+    users.push({username:user,password:pass,bio,avatar:"https://i.ibb.co/6NX5vTq/default-avatar.png"});
+    localStorage.setItem("buzzify_users", JSON.stringify(users));
     alert("Account created!");
     showLogin();
 }
 
-// PROFILE
-function updateProfile(){
-    const pic = document.getElementById("profilePic").value;
-    const bio = document.getElementById("profileBio").value;
-    if(pic) localStorage.setItem("buzzify_pic", pic);
-    if(bio) localStorage.setItem("buzzify_bio", bio);
+// ---------------- SHOW APP ----------------
+function showApp() {
+    document.getElementById('loginPage').classList.add('hidden');
+    document.getElementById('signupPage').classList.add('hidden');
+    document.getElementById('appPage').classList.remove('hidden');
+    showScreen('homeScreen');
     loadProfile();
+    renderHomeFeed();
+    renderVideoFeed();
+    renderProfilePosts();
+    loadMarket();
+    loadUsers();
 }
+
+// ---------------- SCREEN NAVIGATION ----------------
+function showScreen(screenId){
+    const screens = document.querySelectorAll('.mainScreen');
+    screens.forEach(s=>s.classList.add('hidden'));
+    document.getElementById(screenId).classList.remove('hidden');
+
+    // Pause all videos except visible screen
+    document.querySelectorAll('video').forEach(v=>v.pause());
+}
+
+// ---------------- PROFILE ----------------
 function loadProfile(){
-    const user = localStorage.getItem("buzzify_user");
-    document.getElementById("profileUsername").innerText = user;
-    document.getElementById("profileBioText").innerText = localStorage.getItem("buzzify_bio")||'';
-    document.getElementById("profileAvatar").src = localStorage.getItem("buzzify_pic")||'https://i.ibb.co/6NX5vTq/default-avatar.png';
-
-    const gallery = document.getElementById("profilePosts");
-    const posts = JSON.parse(localStorage.getItem("buzzify_posts")||"[]");
-    gallery.innerHTML = "";
-    posts.filter(p=>p.user===user).forEach(p=>{
-        if(p.type==='image'){ gallery.innerHTML += `<img src="${p.content}">`; }
-        else if(p.type==='video'){ gallery.innerHTML += `<video src="${p.content}" controls></video>`; }
-    });
+    document.getElementById('profileUsername').innerText = localStorage.getItem("buzzify_user");
+    document.getElementById('profileBioText').innerText = localStorage.getItem("buzzify_bio");
+    document.getElementById('profileAvatar').src = localStorage.getItem("buzzify_avatar");
 }
 
-// UPLOAD
-function uploadPost(){
-    const fileInput = document.getElementById("uploadFile");
-    if(fileInput.files.length===0){ alert("Select file"); return; }
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-    reader.onload = function(e){
-        const posts = JSON.parse(localStorage.getItem("buzzify_posts")||"[]");
-        const type = file.type.includes("video")?"video":"image";
-        posts.push({user:localStorage.getItem("buzzify_user"), content:e.target.result, type});
-        localStorage.setItem("buzzify_posts", JSON.stringify(posts));
-        alert("Uploaded!");
+function updateProfilePic(){
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.onchange = function(){
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e){
+            localStorage.setItem("buzzify_avatar", e.target.result);
+            loadProfile();
+        };
+        reader.readAsDataURL(file);
+    };
+    fileInput.click();
+}
+
+function editBio(){
+    const newBio = prompt("Enter new bio:", localStorage.getItem("buzzify_bio")||"");
+    if(newBio!==null){
+        localStorage.setItem("buzzify_bio", newBio);
         loadProfile();
     }
-    reader.readAsDataURL(file);
 }
 
-// MARKETPLACE
-function addItem(){
-    const name = document.getElementById("itemName").value;
-    const price = document.getElementById("itemPrice").value;
-    const photoInput = document.getElementById("itemPhoto");
-    if(!name || !price || photoInput.files.length===0){ alert("Fill all fields"); return; }
+// ---------------- UPLOAD POSTS ----------------
+function uploadPost(){
+    const fileInput = document.getElementById('uploadFile');
+    const file = fileInput.files[0];
+    if(!file) return;
 
     const reader = new FileReader();
     reader.onload = function(e){
-        const items = JSON.parse(localStorage.getItem("buzzify_market")||"[]");
-        items.push({name, price, photo:e.target.result});
-        localStorage.setItem("buzzify_market", JSON.stringify(items));
-        loadMarket();
-    }
-    reader.readAsDataURL(photoInput.files[0]);
+        let posts = JSON.parse(localStorage.getItem("buzzify_posts")||"[]");
+        posts.unshift({user:localStorage.getItem("buzzify_user"), src:e.target.result});
+        localStorage.setItem("buzzify_posts", JSON.stringify(posts));
+        renderHomeFeed();
+        renderVideoFeed();
+        renderProfilePosts();
+    };
+    reader.readAsDataURL(file);
+    fileInput.value = "";
 }
 
-function loadMarket(){
-    const feed = document.getElementById("marketFeed");
-    const items = JSON.parse(localStorage.getItem("buzzify_market")||"[]");
+// ---------------- HOME FEED ----------------
+function renderHomeFeed(){
+    const feed = document.getElementById('homeFeed');
+    const posts = JSON.parse(localStorage.getItem("buzzify_posts")||"[]");
     feed.innerHTML = "";
-    if(items.length===0){
-        for(let i=0;i<4;i++){ feed.innerHTML += '<div class="marketItem placeholder">Item</div>'; }
+    if(posts.length===0){
+        for(let i=0;i<3;i++){
+            feed.innerHTML += '<div class="post placeholder">Photo/Video Placeholder</div>';
+        }
     } else {
-        items.forEach(i=>{
-            feed.innerHTML += `<div class="marketItem"><img src="${i.photo}"><strong>${i.name}</strong><span>$${i.price}</span></div>`;
+        posts.forEach(p=>{
+            feed.innerHTML += `<div class="post" style="opacity:0; animation:fadeIn 0.5s forwards;">
+                <img src="${p.src}">
+                <div style="display:flex; justify-content:space-between; width:90%; margin-top:5px;">
+                    <span>❤️</span><span>💬</span>
+                </div>
+            </div>`;
         });
     }
 }
 
-// MESSAGING
+// ---------------- VIDEO FEED ----------------
+function renderVideoFeed(){
+    const feed = document.getElementById('videoFeed');
+    const posts = JSON.parse(localStorage.getItem("buzzify_posts")||"[]");
+    feed.innerHTML = "";
+    if(posts.length===0){
+        for(let i=0;i<3;i++){
+            feed.innerHTML += '<div class="videoPost placeholder">Video Placeholder</div>';
+        }
+    } else {
+        posts.forEach((p, idx)=>{
+            feed.innerHTML += `<div class="videoPost" style="opacity:0; animation:fadeIn 0.5s forwards; animation-delay:${idx*0.2}s;">
+                <video src="${p.src}" controls loop muted playsinline style="width:100%; border-radius:15px;"></video>
+                <div style="display:flex; justify-content:space-between; width:90%; margin-top:5px;">
+                    <span>❤️</span><span>💬</span>
+                </div>
+            </div>`;
+        });
+        observeVideos();
+    }
+}
+
+// ---------------- OBSERVE VIDEOS FOR AUTOPLAY ----------------
+function observeVideos(){
+    const videos = document.querySelectorAll("#videoFeed video");
+    const options = { root: document.getElementById("videosScreen"), threshold: 0.5 };
+    const observer = new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{
+            if(entry.isIntersecting){ entry.target.play(); }
+            else { entry.target.pause(); }
+        });
+    }, options);
+
+    videos.forEach(v=>observer.observe(v));
+}
+
+// ---------------- PROFILE POSTS ----------------
+function renderProfilePosts(){
+    const feed = document.getElementById('profilePosts');
+    const posts = JSON.parse(localStorage.getItem("buzzify_posts")||"[]").filter(p=>p.user===localStorage.getItem("buzzify_user"));
+    feed.innerHTML = "";
+    if(posts.length===0){
+        for(let i=0;i<3;i++){
+            feed.innerHTML += '<div class="placeholder"></div>';
+        }
+    } else {
+        posts.forEach(p=>{
+            feed.innerHTML += `<div><img src="${p.src}" style="width:100%; height:100%; border-radius:10px;"></div>`;
+        });
+    }
+}
+
+// ---------------- MARKETPLACE ----------------
+function loadMarket(){
+    const feed = document.getElementById('marketFeed');
+    const items = JSON.parse(localStorage.getItem("buzzify_market")||"[]");
+    feed.innerHTML = "";
+    if(items.length===0){
+        for(let i=0;i<3;i++){ feed.innerHTML += '<div class="marketItem placeholder">Item</div>'; }
+    } else {
+        items.forEach((i,idx)=>{
+            feed.innerHTML += `<div class="marketItem" style="opacity:0; animation:fadeIn 0.4s forwards; animation-delay:${idx*0.2}s;">
+                <img src="${i.photo}">
+                <strong>${i.name}</strong>
+                <span>$${i.price}</span>
+            </div>`;
+        });
+    }
+}
+
+function addItem(){
+    const fileInput = document.getElementById('itemPhoto');
+    const file = fileInput.files[0];
+    const name = document.getElementById('itemName').value.trim();
+    const price = document.getElementById('itemPrice').value;
+
+    if(!file || !name || !price){ alert("Fill all fields"); return; }
+
+    const reader = new FileReader();
+    reader.onload = function(e){
+        const items = JSON.parse(localStorage.getItem("buzzify_market")||"[]");
+        items.unshift({photo:e.target.result,name,price});
+        localStorage.setItem("buzzify_market", JSON.stringify(items));
+        loadMarket();
+        fileInput.value = "";
+        document.getElementById('itemName').value="";
+        document.getElementById('itemPrice').value="";
+    };
+    reader.readAsDataURL(file);
+}
+
+// ---------------- MESSAGES ----------------
 let currentChatUser = null;
 
 function loadUsers(){
@@ -168,9 +291,16 @@ function loadChatMessages(){
     feed.scrollTop = feed.scrollHeight;
 }
 
-// INIT
+// ---------------- INIT ----------------
 window.onload = function(){
+    if(localStorage.getItem("buzzify_user")){
+        showApp();
+    } else {
+        showLogin();
+    }
+    renderHomeFeed();
+    renderVideoFeed();
+    renderProfilePosts();
     loadMarket();
     loadUsers();
-    loadProfile();
 }
