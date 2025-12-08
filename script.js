@@ -358,14 +358,20 @@ createPostBtn.addEventListener('click', () => {
         renderPosts();
     }
     reader.readAsDataURL(file);
-}
+});
 
 // ==============================
-// INITIAL LOAD
+// INITIAL LOAD (FIXED LOGIN LOOP)
 // ==============================
 window.addEventListener('load', () => {
     const currentUser = localStorage.getItem('buzzify_current_user');
-    if(currentUser){
+    const users = JSON.parse(localStorage.getItem('buzzify_users')) || {};
+
+    if(currentUser && users[currentUser]){
         showApp();
+    } else {
+        localStorage.removeItem('buzzify_current_user');
+        loginScreen.style.display = 'flex';
+        appScreen.style.display = 'none';
     }
 });
