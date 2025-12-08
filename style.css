@@ -15,10 +15,7 @@ body {
     font-size: 16px;
 }
 
-a {
-    text-decoration: none;
-    color: inherit;
-}
+a { text-decoration: none; color: inherit; }
 
 button {
     cursor: pointer;
@@ -34,146 +31,132 @@ button {
 #login-screen {
     width: 100%;
     height: 100vh;
-    background: linear-gradient(135deg, #0f0f12, #1a1a24);
     display: flex;
     justify-content: center;
     align-items: center;
+    background: radial-gradient(circle at 30% 30%, #0b0b0f, #1a1a24);
     position: relative;
     overflow: hidden;
-}
-
-.login-overlay {
-    width: 100%;
-    height: 100%;
-    position: relative;
 }
 
 .login-card {
     position: relative;
     z-index: 10;
-    width: 400px;
+    width: 420px;
     max-width: 90%;
-    background: rgba(20, 20, 30, 0.95);
-    padding: 40px;
-    border-radius: 30px;
-    box-shadow: 0 0 40px rgba(0, 200, 255, 0.4);
-    backdrop-filter: blur(10px);
+    background: rgba(25, 25, 40, 0.95);
+    padding: 50px;
+    border-radius: 40px;
+    box-shadow: 0 0 50px rgba(0, 200, 255, 0.5);
+    backdrop-filter: blur(15px);
     text-align: center;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.login-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 70px rgba(0, 200, 255, 0.7);
 }
 
 .login-card h1 {
-    font-size: 32px;
+    font-size: 36px;
     margin-bottom: 10px;
     color: #00c8ff;
-    text-shadow: 0 0 10px #00c8ff;
+    text-shadow: 0 0 15px #00c8ff;
 }
 
 .login-card p {
-    font-size: 14px;
-    margin-bottom: 30px;
+    font-size: 16px;
+    margin-bottom: 35px;
     color: #ccc;
 }
 
-.login-form input,
-.signup-form input {
-    width: 80%;
-    padding: 14px 18px;
-    margin-bottom: 15px;
-    border-radius: 12px;
+#login-form input,
+#signup-form input {
+    width: 85%;
+    padding: 15px 20px;
+    margin-bottom: 18px;
+    border-radius: 15px;
     border: 1px solid #333;
     background: #0c0c10;
     color: #fff;
-    font-size: 14px;
-}
-
-.login-form button,
-.signup-form button {
-    width: 84%;
-    padding: 14px;
-    margin-top: 10px;
-    border-radius: 14px;
-    background: #00c8ff;
-    color: #000;
-    font-weight: bold;
-    font-size: 16px;
+    font-size: 15px;
     transition: all 0.3s ease;
 }
 
-.login-form button:hover,
-.signup-form button:hover {
-    box-shadow: 0 0 20px #00c8ff;
-    transform: translateY(-3px);
+#login-form input:focus,
+#signup-form input:focus {
+    border: 1px solid #00c8ff;
+    box-shadow: 0 0 15px #00c8ff;
+    outline: none;
 }
 
-.login-socials {
-    margin-top: 25px;
+#login-form button,
+#signup-form button {
+    width: 88%;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #00c8ff, #ff00ff);
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.4s ease;
+}
+
+#login-form button:hover,
+#signup-form button:hover {
+    box-shadow: 0 0 25px #00c8ff, 0 0 25px #ff00ff;
+    transform: translateY(-3px) scale(1.02);
+}
+
+.divider {
+    margin: 20px 0;
+    color: #888;
+    font-size: 14px;
 }
 
 .social-btn {
-    width: 80px;
-    margin: 0 5px;
-    padding: 10px;
+    width: 50px;
+    height: 50px;
+    margin: 0 8px;
     border-radius: 50%;
-    background: #1f1f2b;
+    background: #1c1c28;
     color: #fff;
-    display: inline-block;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
     transition: all 0.3s ease;
 }
 
 .social-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 15px #00c8ff;
+    transform: scale(1.2);
+    box-shadow: 0 0 20px #00c8ff;
 }
 
 /* Floating Glow Effects */
-.login-background .floating-glow {
+.floating-glow {
     position: absolute;
     border-radius: 50%;
-    filter: blur(70px);
+    filter: blur(80px);
     opacity: 0.7;
-}
-
-.glow-1 {
-    width: 250px;
-    height: 250px;
-    background: #00c8ff;
-    top: -50px;
-    left: -50px;
-    animation: float 6s ease-in-out infinite;
-}
-
-.glow-2 {
-    width: 200px;
-    height: 200px;
-    background: #ff00ff;
-    bottom: -30px;
-    right: -40px;
     animation: float 8s ease-in-out infinite alternate;
 }
 
-.glow-3 {
-    width: 300px;
-    height: 300px;
-    background: #ff8c00;
-    top: 100px;
-    right: 100px;
-    animation: float 10s ease-in-out infinite;
-}
+.glow-1 { width: 300px; height: 300px; background: #00c8ff; top: -60px; left: -60px; }
+.glow-2 { width: 250px; height: 250px; background: #ff00ff; bottom: -50px; right: -50px; }
+.glow-3 { width: 350px; height: 350px; background: #ff8c00; top: 80px; right: 100px; }
 
 @keyframes float {
-    0% {
-        transform: translateY(0px) translateX(0px);
-    }
-    50% {
-        transform: translateY(20px) translateX(15px);
-    }
-    100% {
-        transform: translateY(0px) translateX(0px);
-    }
+    0% { transform: translateY(0px) translateX(0px); }
+    50% { transform: translateY(25px) translateX(20px); }
+    100% { transform: translateY(0px) translateX(0px); }
 }
 
 /* ============================= */
-/* TOPBAR STYLES                  */
+/* TOPBAR & NAVBAR STYLES         */
 /* ============================= */
 .topbar {
     position: fixed;
@@ -189,45 +172,6 @@ button {
     z-index: 100;
 }
 
-.topbar .logo-section h1 {
-    font-size: 24px;
-    color: #00c8ff;
-    text-shadow: 0 0 8px #00c8ff;
-}
-
-.topbar .topbar-badge {
-    background: #ff00ff;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 12px;
-    margin-left: 10px;
-    color: #fff;
-}
-
-.topbar .search-section input {
-    padding: 8px 12px;
-    border-radius: 12px;
-    border: none;
-    width: 250px;
-    background: #1c1c28;
-    color: #fff;
-}
-
-.topbar-icons .icon-btn {
-    margin-left: 15px;
-    font-size: 20px;
-    transition: all 0.3s ease;
-}
-
-.topbar-icons .icon-btn:hover {
-    transform: scale(1.2);
-    color: #00c8ff;
-    text-shadow: 0 0 10px #00c8ff;
-}
-
-/* ============================= */
-/* NAVBAR STYLES                  */
-/* ============================= */
 .navbar {
     position: fixed;
     bottom: 0;
@@ -256,11 +200,9 @@ button {
 }
 
 /* ============================= */
-/* FEED / VIDEO POST STYLES       */
+/* FEED / VIDEO POSTS             */
 /* ============================= */
-.feed-container {
-    padding: 90px 20px 100px 20px;
-}
+.feed-container { padding: 90px 20px 100px 20px; }
 
 .video-post {
     background: #181820;
@@ -311,7 +253,6 @@ button {
     box-shadow: 0 0 15px #00c8ff;
 }
 
-/* Media Placeholder & Loading */
 .media-placeholder {
     position: relative;
     width: 100%;
@@ -333,10 +274,7 @@ button {
     animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
 .media-label {
     position: absolute;
@@ -346,3 +284,41 @@ button {
     top: 50%;
     transform: translateY(-50%);
 }
+
+/* ============================= */
+/* PROFILE / MARKETPLACE / CHAT   */
+/* ============================= */
+.profile-container {
+    padding: 90px 20px 100px 20px;
+    text-align: center;
+}
+
+.profile-avatar { width: 150px; height: 150px; border-radius: 50%; margin-bottom: 15px; border: 4px solid #00c8ff; box-shadow:0 0 20px #00c8ff inset; }
+
+.profile-name { font-size: 26px; font-weight: bold; margin-bottom: 5px; }
+
+.profile-bio { font-size: 14px; opacity: 0.8; margin-bottom: 20px; }
+
+.profile-stats { display:flex; justify-content:space-around; margin-bottom:20px; }
+
+.profile-stats div { background:#1c1c28; padding:15px 20px; border-radius:20px; box-shadow:0 0 15px rgba(0,200,255,0.3); transition:all 0.3s ease; }
+
+.profile-stats div:hover { transform:translateY(-5px); box-shadow:0 0 30px rgba(0,200,255,0.5); }
+
+/* Marketplace */
+.marketplace-container { padding: 40px 20px; }
+
+.marketplace-cards { display:flex; gap:15px; overflow-x:auto; }
+
+.marketplace-card { min-width:180px; background:#181820; border-radius:20px; padding:12px; box-shadow:0 0 15px rgba(0,200,255,0.3); transition:all 0.3s ease; }
+
+.marketplace-card:hover { transform:translateY(-5px); box-shadow:0 0 40px rgba(0,200,255,0.5); }
+
+/* Nearby Chat */
+.chat-container { padding: 40px 20px; }
+
+.chat-cards { display:flex; gap:15px; overflow-x:auto; }
+
+.chat-card { min-width:140px; background:#181820; border-radius:20px; padding:12px; box-shadow:0 0 15px rgba(0,200,255,0.3); transition:all 0.3s ease; }
+
+.chat-card:hover { transform:translateY(-5px); box-shadow:0 0 40px rgba(0,200,255,0.5); }
