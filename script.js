@@ -13,16 +13,14 @@ const loginPassword = document.getElementById('login-password');
 const signupUsername = document.getElementById('signup-username');
 const signupPassword = document.getElementById('signup-password');
 
-// ==============================
-// CHECK IF USER IS ALREADY LOGGED IN
-// ==============================
-window.addEventListener('load', () => {
-    const currentUser = localStorage.getItem('buzzify_current_user');
-    if (currentUser) {
-        // User already logged in
-        showApp();
-    }
-});
+// App sections
+const feedContainer = document.querySelector('.feed-container');
+const profileContainer = document.querySelector('.profile-container');
+const marketplaceContainer = document.querySelector('.marketplace-container');
+const chatContainer = document.querySelector('.chat-container');
+
+// Navbar items
+const navbarItems = document.querySelectorAll('.navbar .nav-item');
 
 // ==============================
 // SHOW APP FUNCTION
@@ -30,6 +28,7 @@ window.addEventListener('load', () => {
 function showApp() {
     loginScreen.style.display = 'none';
     appScreen.style.display = 'block';
+    showSection('Home'); // Default to Home
 }
 
 // ==============================
@@ -60,7 +59,7 @@ signupForm.addEventListener('submit', (e) => {
         followers: 0,
         following: 0,
         likes: 0,
-        bio: "",
+        bio: "This is your bio!",
         posts: []
     };
 
@@ -68,6 +67,7 @@ signupForm.addEventListener('submit', (e) => {
     localStorage.setItem('buzzify_current_user', username);
 
     alert('Sign-up successful! Logging you in...');
+    updateProfile();
     showApp();
 });
 
@@ -92,8 +92,8 @@ loginForm.addEventListener('submit', (e) => {
         return;
     }
 
-    // Login successful
     localStorage.setItem('buzzify_current_user', username);
+    updateProfile();
     showApp();
 });
 
@@ -107,13 +107,84 @@ function logout() {
 }
 
 // ==============================
-// OPTIONAL: EXAMPLE INTERACTIONS
+// NAVIGATION FUNCTIONALITY
 // ==============================
-// Like button example
-document.querySelectorAll('.video-post .post-actions button').forEach(button => {
-    button.addEventListener('click', (e) => {
-        if (button.textContent.includes('Like')) {
-            button.textContent = '❤️ Liked';
+function showSection(section) {
+    // Hide all sections
+    feedContainer.style.display = 'none';
+    profileContainer.style.display = 'none';
+    marketplaceContainer.style.display = 'none';
+    chatContainer.style.display = 'none';
+
+    // Remove active class from all navbar items
+    navbarItems.forEach(item => item.classList.remove('active'));
+
+    // Show selected section
+    switch (section) {
+        case 'Home':
+            feedContainer.style.display = 'block';
+            navbarItems[0].classList.add('active');
+            break;
+        case 'Explore':
+            // For now Explore = Marketplace
+            marketplaceContainer.style.display = 'block';
+            navbarItems[1].classList.add('active');
+            break;
+        case 'Chat':
+            chatContainer.style.display = 'block';
+            navbarItems[2].classList.add('active');
+            break;
+        case 'Marketplace':
+            marketplaceContainer.style.display = 'block';
+            navbarItems[3].classList.add('active');
+            break;
+        case 'Profile':
+            profileContainer.style.display = 'block';
+            navbarItems[4].classList.add('active');
+            break;
+    }
+}
+
+// Add click events to navbar
+navbarItems.forEach((item, index) => {
+    item.addEventListener('click', () => {
+        switch (index) {
+            case 0: showSection('Home'); break;
+            case 1: showSection('Explore'); break;
+            case 2: showSection('Chat'); break;
+            case 3: showSection('Marketplace'); break;
+            case 4: showSection('Profile'); break;
         }
     });
+});
+
+// ==============================
+// UPDATE PROFILE INFO
+// ==============================
+function updateProfile() {
+    const currentUser = localStorage.getItem('buzzify_current_user');
+    if (!currentUser) return;
+
+    const users = JSON.parse(localStorage.getItem('buzzify_users')) || {};
+    const user = users[currentUser];
+
+    // Update profile section
+    profileContainer.querySelector('.profile-name').textContent = currentUser;
+    profileContainer.querySelector('.profile-bio').textContent = user.bio;
+    profileContainer.querySelector('.profile-stats').innerHTML = `
+        <div>Followers: ${user.followers}</div>
+        <div>Following: ${user.following}</div>
+        <div>Likes: ${user.likes}</div>
+    `;
+}
+
+// ==============================
+// INITIALIZE
+// ==============================
+window.addEventListener('load', () => {
+    const currentUser = localStorage.getItem('buzzify_current_user');
+    if (currentUser) {
+        updateProfile();
+        showApp();
+    }
 });
