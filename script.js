@@ -37,6 +37,12 @@ const profileBioInput = document.getElementById('profile-bio-input');
 const editBioBtn = document.getElementById('edit-bio-btn');
 const saveBioBtn = document.getElementById('save-bio-btn');
 
+// Home feed elements
+const postMediaInput = document.getElementById('post-media-input');
+const postCaptionInput = document.getElementById('post-caption');
+const createPostBtn = document.getElementById('create-post-btn');
+const postsFeed = document.getElementById('posts-feed');
+
 // ==============================
 // HELPER FUNCTIONS
 // ==============================
@@ -48,6 +54,7 @@ function showApp() {
     showSection('Home');
     loadProfileData();
     updateProfile();
+    renderPosts();
 }
 
 // Show only the selected section
@@ -145,6 +152,7 @@ signupForm.addEventListener('submit', e => {
         following: 0,
         likes: 0,
         bio: "This is your bio!",
+        avatar: null,
         posts: []
     };
 
@@ -268,6 +276,89 @@ saveBioBtn.addEventListener('click', () => {
     editBioBtn.style.display = 'inline-block';
     saveBioBtn.style.display = 'none';
 });
+
+// ==============================
+// HOME FEED POST FUNCTIONALITY
+// ==============================
+function renderPosts() {
+    const currentUser = localStorage.getItem('buzzify_current_user');
+    if(!currentUser) return;
+
+    const users = JSON.parse(localStorage.getItem('buzzify_users')) || {};
+    const user = users[currentUser];
+    const posts = user.posts || [];
+
+    postsFeed.innerHTML = '';
+
+    posts.slice().reverse().forEach(post => {
+        const postElement = document.createElement('div');
+        postElement.classList.add('video-post');
+
+        const mediaElement = post.type === 'video' ? 
+            `<video src="${post.media}" controls></video>` :
+            `<img src="${post.media}" alt="Post Image">`;
+
+        postElement.innerHTML = `
+            <div class="post-header">
+                <div class="avatar"></div>
+                <div class="username">${currentUser}</div>
+            </div>
+            <div class="media-placeholder">
+                ${mediaElement}
+            </div>
+            <div class="post-caption">${post.caption}</div>
+            <div class="post-actions">
+                <button class="like-btn">${post.likes} ❤️ Like</button>
+            </div>
+        `;
+
+        const likeBtn = postElement.querySelector('.like-btn');
+        likeBtn.addEventListener('click', () => {
+            post.likes++;
+            likeBtn.textContent = `${post.likes} ❤️ Like`;
+            users[currentUser].posts = user.posts;
+            localStorage.setItem('buzzify_users', JSON.stringify(users));
+            updateProfile();
+        });
+
+        postsFeed.appendChild(postElement);
+    });
+}
+
+// Create new post
+createPostBtn.addEventListener('click', () => {
+    const file = postMediaInput.files[0];
+    const caption = postCaptionInput.value.trim();
+    if(!file){
+        alert('Please select an image or video to post.');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(event){
+        const currentUser = localStorage.getItem('buzzify_current_user');
+        const users = JSON.parse(localStorage.getItem('buzzify_users')) || {};
+        const user = users[currentUser];
+
+        if(!user.posts) user.posts = [];
+
+        const type = file.type.startsWith('video') ? 'video' : 'image';
+        user.posts.push({
+            media: event.target.result,
+            caption: caption,
+            type: type,
+            likes: 0
+        });
+
+        users[currentUser] = user;
+        localStorage.setItem('buzzify_users', JSON.stringify(users));
+
+        postMediaInput.value = '';
+        postCaptionInput.value = '';
+        renderPosts();
+    }
+    reader.readAsDataURL(file);
+}
 
 // ==============================
 // INITIAL LOAD
