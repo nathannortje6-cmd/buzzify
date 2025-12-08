@@ -1,225 +1,149 @@
-// ===== Local Storage Keys =====
-const USERS_KEY = 'buzzify_users';
-const POSTS_KEY = 'buzzify_posts';
-const MARKET_KEY = 'buzzify_market';
+/* -------------------------------------------------------
+   BUZZIFY MAIN SCRIPT
+   Handles: page loading, navigation, data storage
+---------------------------------------------------------*/
 
-// ===== Helper Functions =====
-function getUsers() { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; }
-function saveUsers(users) { localStorage.setItem(USERS_KEY, JSON.stringify(users)); }
-function getPosts() { return JSON.parse(localStorage.getItem(POSTS_KEY)) || []; }
-function savePosts(posts) { localStorage.setItem(POSTS_KEY, JSON.stringify(posts)); }
-function getMarketItems() { return JSON.parse(localStorage.getItem(MARKET_KEY)) || []; }
-function saveMarketItems(items) { localStorage.setItem(MARKET_KEY, JSON.stringify(items)); }
+// GLOBAL PAGE LOADER
+function load(page) {
+    const app = document.getElementById("app");
+    app.classList.add("fade-out");
 
-// ===== Current User =====
-let currentUser = null;
+    setTimeout(() => {
+        app.innerHTML = pages[page];
+        app.classList.remove("fade-out");
+        setActive(page);
 
-// ===== Screen Management =====
-function showScreen(screenId) {
-    const screens = document.querySelectorAll('.mainScreen');
-    screens.forEach(s => s.classList.add('hidden'));
-    document.getElementById(screenId).classList.remove('hidden');
+        // Run page-specific scripts
+        if (page === "profile") loadProfile();
+        if (page === "chat") startNearbySimulation();
+    }, 180);
 }
 
-// ===== Login / Signup =====
-function login() {
-    const username = document.getElementById('loginUser').value.trim();
-    const password = document.getElementById('loginPass').value.trim();
-    const users = getUsers();
-
-    const user = users.find(u => u.username === username && u.password === password);
-    if (user) {
-        currentUser = user;
-        loadApp();
-    } else {
-        alert('Invalid username or password!');
-    }
+// HIGHLIGHT ACTIVE NAV BUTTON
+function setActive(page) {
+    document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+    document.getElementById(page + "Btn").classList.add("active");
 }
 
-function signup() {
-    const username = document.getElementById('newUser').value.trim();
-    const password = document.getElementById('newPass').value.trim();
-    const bio = document.getElementById('newBio').value.trim();
+/* -------------------------------------------------------
+   PAGE TEMPLATES
+---------------------------------------------------------*/
 
-    if (!username || !password) { alert('Username and password required!'); return; }
+const navbar = `
+<div class="navbar">
+    <div id="homeBtn" class="nav-item" onclick="load('home')">Home</div>
+    <div id="marketBtn" class="nav-item" onclick="load('market')">Market</div>
+    <div id="chatBtn" class="nav-item" onclick="load('chat')">Nearby</div>
+    <div id="profileBtn" class="nav-item" onclick="load('profile')">Profile</div>
+</div>
+`;
 
-    const users = getUsers();
-    if (users.some(u => u.username === username)) { alert('Username exists!'); return; }
+const pages = {
+    home: `
+        <div class="topbar">Buzzify</div>
+        <div class="feed">
+            <div class="post">
+                <div class="post-username">@nathan</div>
+                <div class="post-content">Welcome to Buzzify — the new world of connection 🌍</div>
+            </div>
 
-    const newUser = { username, password, bio, avatar: '' };
-    users.push(newUser);
-    saveUsers(users);
-    currentUser = newUser;
-    loadApp();
+            <div class="post">
+                <div class="post-username">@lexi</div>
+                <div class="post-content">Who else is loving this new app? 🔥</div>
+            </div>
+
+            <div class="post">
+                <div class="post-username">@mike</div>
+                <div class="post-content">Slide into the Nearby Chat and say hi 👋</div>
+            </div>
+        </div>
+        ${navbar}
+    `,
+
+    market: `
+        <div class="topbar">Marketplace</div>
+        <div class="market">
+            <div class="item"><img src="https://i.imgur.com/7QdJfFf.png"><p>Headphones</p></div>
+            <div class="item"><img src="https://i.imgur.com/C86hD5R.png"><p>Phone</p></div>
+            <div class="item"><img src="https://i.imgur.com/f1K9qP2.png"><p>Sneakers</p></div>
+            <div class="item"><img src="https://i.imgur.com/Jwl4I4j.png"><p>Watch</p></div>
+        </div>
+        ${navbar}
+    `,
+
+    chat: `
+        <div class="topbar">Nearby Chat</div>
+        <div class="nearby-box">
+            <p class="nearby-title">People around you:</p>
+            <div id="nearbyList" class="nearby-list"></div>
+        </div>
+        ${navbar}
+    `,
+
+    profile: `
+        <div class="topbar">My Profile</div>
+
+        <div class="profile">
+            <img id="profilePic" src="https://via.placeholder.com/140">
+            <h2 id="profileName"></h2>
+
+            <input id="nameInput" type="text" placeholder="Enter your name" class="profile-input">
+
+            <button onclick="saveProfile()" class="save-btn">Save Profile</button>
+        </div>
+
+        ${navbar}
+    `
+};
+
+/* -------------------------------------------------------
+   NEARBY USERS SIMULATION
+---------------------------------------------------------*/
+
+function startNearbySimulation() {
+    const users = [
+        { name: "Josh", dist: "320 m" },
+        { name: "Amber", dist: "1.2 km" },
+        { name: "Keegan", dist: "890 m" },
+        { name: "Sasha", dist: "2.1 km" }
+    ];
+
+    const list = document.getElementById("nearbyList");
+    list.innerHTML = "";
+
+    users.forEach(u => {
+        const div = document.createElement("div");
+        div.className = "nearby-user";
+        div.innerHTML = `
+            <strong>${u.name}</strong>
+            <span>${u.dist} away</span>
+        `;
+        list.appendChild(div);
+    });
 }
 
-function showSignup() {
-    document.getElementById('loginPage').classList.add('hidden');
-    document.getElementById('signupPage').classList.remove('hidden');
+/* -------------------------------------------------------
+   PROFILE SYSTEM
+---------------------------------------------------------*/
+
+function loadProfile() {
+    const storedName = localStorage.getItem("buzzify_name") || "Your Name";
+    document.getElementById("profileName").innerText = storedName;
+    document.getElementById("nameInput").value = storedName;
 }
 
-function showLogin() {
-    document.getElementById('signupPage').classList.add('hidden');
-    document.getElementById('loginPage').classList.remove('hidden');
+function saveProfile() {
+    const name = document.getElementById("nameInput").value;
+    if (name.trim() === "") return;
+
+    localStorage.setItem("buzzify_name", name);
+    load("profile");
 }
 
-// ===== Load App =====
-function loadApp() {
-    document.getElementById('loginPage').classList.add('hidden');
-    document.getElementById('signupPage').classList.add('hidden');
-    document.getElementById('appPage').classList.remove('hidden');
+/* -------------------------------------------------------
+   INIT APP
+---------------------------------------------------------*/
 
-    // Update profile info
-    document.getElementById('profileUsername').innerText = currentUser.username;
-    document.getElementById('profileBioText').innerText = currentUser.bio || '';
-    document.getElementById('profileAvatar').src = currentUser.avatar || 'https://i.ibb.co/6NX5vTq/default-avatar.png';
-
-    // Show only home screen initially
-    showScreen('homeScreen');
-
-    renderHome();
-    renderVideos();
-    renderMarket();
-    renderProfilePosts();
-}
-
-// ===== Render Functions =====
-function renderHome() { renderFeed('homeFeed', getPosts()); }
-function renderVideos() { renderFeed('videoFeed', getPosts().filter(p => p.type === 'video')); }
-function renderProfilePosts() { renderFeed('profilePosts', getPosts().filter(p => p.user === currentUser.username)); }
-function renderMarket() { renderFeed('marketFeed', getMarketItems(), true); }
-
-// ===== Generic Feed Renderer =====
-function renderFeed(containerId, items, isMarket = false) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = '';
-
-    if (items.length === 0) {
-        // Show 6 shimmer boxes
-        for (let i = 0; i < 6; i++) {
-            const box = document.createElement('div');
-            box.className = 'loadingBox';
-            container.appendChild(box);
-        }
-    } else {
-        items.forEach(item => {
-            const box = document.createElement('div');
-            box.className = 'loadingBox';
-
-            if (isMarket) {
-                const img = document.createElement('img');
-                img.src = item.photo;
-                img.style.width = '100%';
-                img.style.borderRadius = '12px';
-                box.innerHTML = '';
-                box.appendChild(img);
-            } else if (item.type === 'image') {
-                const img = document.createElement('img');
-                img.src = item.data;
-                img.style.width = '100%';
-                img.style.borderRadius = '12px';
-                box.innerHTML = '';
-                box.appendChild(img);
-            } else if (item.type === 'video') {
-                const vid = document.createElement('video');
-                vid.src = item.data;
-                vid.controls = true;
-                vid.style.width = '100%';
-                vid.style.borderRadius = '12px';
-                box.innerHTML = '';
-                box.appendChild(vid);
-            }
-
-            container.appendChild(box);
-        });
-    }
-}
-
-// ===== Upload Posts =====
-function uploadPost() {
-    const file = document.getElementById('uploadFile').files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        const posts = getPosts();
-        const type = file.type.startsWith('video') ? 'video' : 'image';
-        posts.unshift({ user: currentUser.username, data: e.target.result, type });
-        savePosts(posts);
-        renderHome();
-        renderVideos();
-        renderProfilePosts();
-    }
-    reader.readAsDataURL(file);
-}
-
-// ===== Marketplace Upload =====
-function addItem() {
-    const photo = document.getElementById('itemPhoto').files[0];
-    const name = document.getElementById('itemName').value.trim();
-    const price = document.getElementById('itemPrice').value.trim();
-
-    if (!photo || !name || !price) { alert('Complete all fields!'); return; }
-
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        const items = getMarketItems();
-        items.unshift({ user: currentUser.username, name, price, photo: e.target.result });
-        saveMarketItems(items);
-        renderMarket();
-    }
-    reader.readAsDataURL(photo);
-}
-
-// ===== Messages =====
-function sendChatMessage() {
-    const input = document.getElementById('chatInput');
-    if (input.value.trim() === '') return;
-
-    const msg = document.createElement('div');
-    msg.innerText = input.value.trim();
-    msg.style.background = '#dcd6f7';
-    msg.style.margin = '5px';
-    msg.style.padding = '5px';
-    msg.style.borderRadius = '10px';
-
-    document.getElementById('chatMessages').appendChild(msg);
-    input.value = '';
-}
-
-function closeChat() {
-    document.getElementById('chatScreen').classList.add('hidden');
-    document.getElementById('userList').classList.remove('hidden');
-}
-
-// ===== Profile =====
-function updateProfilePic() {
-    const file = document.createElement('input');
-    file.type = 'file';
-    file.accept = 'image/*';
-    file.onchange = function () {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            currentUser.avatar = e.target.result;
-            document.getElementById('profileAvatar').src = currentUser.avatar;
-
-            const users = getUsers();
-            users[users.findIndex(u => u.username === currentUser.username)] = currentUser;
-            saveUsers(users);
-        }
-        reader.readAsDataURL(file.files[0]);
-    }
-    file.click();
-}
-
-function editBio() {
-    const newBio = prompt('Enter new bio:', currentUser.bio || '');
-    if (newBio !== null) {
-        currentUser.bio = newBio;
-        document.getElementById('profileBioText').innerText = currentUser.bio;
-
-        const users = getUsers();
-        users[users.findIndex(u => u.username === currentUser.username)] = currentUser;
-        saveUsers(users);
-    }
-}
+document.addEventListener("DOMContentLoaded", () => {
+    load("home");
+});
