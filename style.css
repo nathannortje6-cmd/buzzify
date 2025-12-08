@@ -1,78 +1,348 @@
-/* RESET */
+/* ============================= */
+/* GLOBAL RESET AND BASE STYLES  */
+/* ============================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
-    color: #fff;
+    font-family: 'Arial', sans-serif;
 }
 
 body {
-    background: #0d0d0e;
+    background: #0b0b0f;
+    color: #fff;
     overflow-x: hidden;
+    font-size: 16px;
 }
 
-/* MAIN TOP BAR */
-.topbar {
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background: none;
+    font-family: inherit;
+}
+
+/* ============================= */
+/* LOGIN / SIGN-UP STYLES         */
+/* ============================= */
+#login-screen {
     width: 100%;
-    padding: 18px;
-    background: #111214;
-    border-bottom: 2px solid #00c8ff;
-    text-align: center;
-    font-size: 22px;
-    font-weight: bold;
-    letter-spacing: 1px;
+    height: 100vh;
+    background: linear-gradient(135deg, #0f0f12, #1a1a24);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
 }
 
-/* NAVIGATION BAR */
+.login-overlay {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.login-card {
+    position: relative;
+    z-index: 10;
+    width: 400px;
+    max-width: 90%;
+    background: rgba(20, 20, 30, 0.95);
+    padding: 40px;
+    border-radius: 30px;
+    box-shadow: 0 0 40px rgba(0, 200, 255, 0.4);
+    backdrop-filter: blur(10px);
+    text-align: center;
+}
+
+.login-card h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: #00c8ff;
+    text-shadow: 0 0 10px #00c8ff;
+}
+
+.login-card p {
+    font-size: 14px;
+    margin-bottom: 30px;
+    color: #ccc;
+}
+
+.login-form input,
+.signup-form input {
+    width: 80%;
+    padding: 14px 18px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    border: 1px solid #333;
+    background: #0c0c10;
+    color: #fff;
+    font-size: 14px;
+}
+
+.login-form button,
+.signup-form button {
+    width: 84%;
+    padding: 14px;
+    margin-top: 10px;
+    border-radius: 14px;
+    background: #00c8ff;
+    color: #000;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.login-form button:hover,
+.signup-form button:hover {
+    box-shadow: 0 0 20px #00c8ff;
+    transform: translateY(-3px);
+}
+
+.login-socials {
+    margin-top: 25px;
+}
+
+.social-btn {
+    width: 80px;
+    margin: 0 5px;
+    padding: 10px;
+    border-radius: 50%;
+    background: #1f1f2b;
+    color: #fff;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.social-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #00c8ff;
+}
+
+/* Floating Glow Effects */
+.login-background .floating-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.7;
+}
+
+.glow-1 {
+    width: 250px;
+    height: 250px;
+    background: #00c8ff;
+    top: -50px;
+    left: -50px;
+    animation: float 6s ease-in-out infinite;
+}
+
+.glow-2 {
+    width: 200px;
+    height: 200px;
+    background: #ff00ff;
+    bottom: -30px;
+    right: -40px;
+    animation: float 8s ease-in-out infinite alternate;
+}
+
+.glow-3 {
+    width: 300px;
+    height: 300px;
+    background: #ff8c00;
+    top: 100px;
+    right: 100px;
+    animation: float 10s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px) translateX(0px);
+    }
+    50% {
+        transform: translateY(20px) translateX(15px);
+    }
+    100% {
+        transform: translateY(0px) translateX(0px);
+    }
+}
+
+/* ============================= */
+/* TOPBAR STYLES                  */
+/* ============================= */
+.topbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 70px;
+    background: #121215;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 25px;
+    border-bottom: 2px solid #00c8ff;
+    z-index: 100;
+}
+
+.topbar .logo-section h1 {
+    font-size: 24px;
+    color: #00c8ff;
+    text-shadow: 0 0 8px #00c8ff;
+}
+
+.topbar .topbar-badge {
+    background: #ff00ff;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    margin-left: 10px;
+    color: #fff;
+}
+
+.topbar .search-section input {
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: none;
+    width: 250px;
+    background: #1c1c28;
+    color: #fff;
+}
+
+.topbar-icons .icon-btn {
+    margin-left: 15px;
+    font-size: 20px;
+    transition: all 0.3s ease;
+}
+
+.topbar-icons .icon-btn:hover {
+    transform: scale(1.2);
+    color: #00c8ff;
+    text-shadow: 0 0 10px #00c8ff;
+}
+
+/* ============================= */
+/* NAVBAR STYLES                  */
+/* ============================= */
 .navbar {
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 65px;
-    background: #111214;
-    border-top: 2px solid #00c8ff;
+    height: 70px;
+    background: #121215;
     display: flex;
     justify-content: space-around;
     align-items: center;
+    border-top: 2px solid #00c8ff;
+    z-index: 100;
 }
 
 .nav-item {
+    font-size: 14px;
+    opacity: 0.7;
+    transition: all 0.3s ease;
     text-align: center;
-    font-size: 13px;
-    opacity: 0.6;
-    transition: 0.3s ease;
-    cursor: pointer;
 }
 
 .nav-item.active {
     opacity: 1;
     color: #00c8ff;
-    transform: translateY(-5px);
-}
-
-/* FEED */
-.feed {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.post {
-    background: #18191c;
-    border-radius: 18px;
-    padding: 18px;
-    border: 1px solid #222;
-    box-shadow: 0 0 12px #0006;
-}
-
-.post-username {
-    font-size: 18px;
+    transform: translateY(-6px);
     font-weight: bold;
-    color: #00c8ff;
-    margin-bottom: 10px;
 }
 
-.post-content {
-    font-size
+/* ============================= */
+/* FEED / VIDEO POST STYLES       */
+/* ============================= */
+.feed-container {
+    padding: 90px 20px 100px 20px;
+}
+
+.video-post {
+    background: #181820;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 0 20px rgba(0, 200, 255, 0.3);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.video-post:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 40px rgba(0, 200, 255, 0.5);
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+}
+
+.post-header .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #0c0c10;
+    margin-right: 15px;
+    box-shadow: 0 0 10px #00c8ff inset;
+}
+
+.post-header .username {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.post-header .follow-btn {
+    margin-left: auto;
+    padding: 6px 14px;
+    border-radius: 14px;
+    background: #00c8ff;
+    color: #000;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.post-header .follow-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #00c8ff;
+}
+
+/* Media Placeholder & Loading */
+.media-placeholder {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    background: #0c0c10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0 0 20px 20px;
+    overflow: hidden;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #1a1a24;
+    border-top: 5px solid #00c8ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.media-label {
+    position: absolute;
+    color: #888;
+    font-size: 14px;
+    text-align: center;
+    top: 50%;
+    transform: translateY(-50%);
+}
